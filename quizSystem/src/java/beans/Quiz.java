@@ -4,6 +4,8 @@
  */
 package beans;
 
+import java.util.List;
+
 /**
  *
  * @author User
@@ -14,40 +16,55 @@ public class Quiz {
     private String description;
     private boolean isPublished;
     private int createdBy;
+    private List<Question> questions;
 
-    // Getters and Setters
-    public int getQuizId() {
-        return quizId;
-    }
     public void setQuizId(int quizId) {
         this.quizId = quizId;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setIsPublished(boolean isPublished) {
+        this.isPublished = isPublished;
+    }
+
+    public void setCreatedBy(int createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public void setQuestions(List questions) {
+        this.questions = questions;
+    }
+
+    public int getQuizId() {
+        return quizId;
     }
 
     public String getTitle() {
         return title;
     }
-    public void setTitle(String title) {
-        this.title = title;
-    }
 
     public String getDescription() {
         return description;
     }
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
-    public boolean isPublished() {
+    public boolean isIsPublished() {
         return isPublished;
-    }
-    public void setPublished(boolean isPublished) {
-        this.isPublished = isPublished;
     }
 
     public int getCreatedBy() {
         return createdBy;
     }
-    public void setCreatedBy(int createdBy) {
-        this.createdBy = createdBy;
+
+    public List getQuestions() {
+        return questions;
     }
+
+    
 }

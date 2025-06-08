@@ -9,37 +9,42 @@ package beans;
  * @author User
  */
 public class Option {
-    private int optionId;
-    private int questionId;
+
+    private int optionID;
+    private int questionID;
     private String optionText;
     private boolean isCorrect;
 
-    // Getters and Setters
-    public int getOptionId() {
-        return optionId;
-    }
-    public void setOptionId(int optionId) {
-        this.optionId = optionId;
+    public void setOptionID(int optionID) {
+        this.optionID = optionID;
     }
 
-    public int getQuestionId() {
-        return questionId;
+    public void setQuestionID(int questionID) {
+        this.questionID = questionID;
     }
-    public void setQuestionId(int questionId) {
-        this.questionId = questionId;
+
+    public void setOptionText(String optionText) {
+        this.optionText = optionText;
+    }
+
+    public void setIsCorrect(boolean isCorrect) {
+        this.isCorrect = isCorrect;
+    }
+
+    public int getOptionID() {
+        return optionID;
+    }
+
+    public int getQuestionID() {
+        return questionID;
     }
 
     public String getOptionText() {
         return optionText;
     }
-    public void setOptionText(String optionText) {
-        this.optionText = optionText;
-    }
 
-    public boolean isCorrect() {
+    public boolean getIsCorrect() {
         return isCorrect;
     }
-    public void setCorrect(boolean isCorrect) {
-        this.isCorrect = isCorrect;
-    }
+
 }

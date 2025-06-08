@@ -17,68 +17,105 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class QuestionDAO {
-    private Connection connection;
+
+    private Connection con;
 
     public QuestionDAO() {
-        connection = DBConnection.getConnection();
+        con = DBConnection.getConnection();
     }
 
-    // Create new question
-    public boolean createQuestion(Question question) {
+    // Get options for a specific question
+    public int insertQuestion(Question question) {
+        int questionId = -1;
+
+        String insertQuestionQuery = "INSERT INTO questions (quiz_id, question_text, type, points, order_index) VALUES (?, ?, ?, ?, ?)";
         try {
-            String sql = "INSERT INTO questions (quiz_id, question_text, type, points, order_index) VALUES (?, ?, ?, ?, ?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, question.getQuizId());
-            preparedStatement.setString(2, question.getQuestionText());
-            preparedStatement.setString(3, question.getType());
-            preparedStatement.setInt(4, question.getPoints());
-            preparedStatement.setInt(5, question.getOrderIndex());
+            PreparedStatement ps = con.prepareStatement(insertQuestionQuery, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, question.getQuizid());
+            ps.setString(2, question.getQuestionText());
+            ps.setString(3, question.getType());
+            ps.setInt(4, question.getPoints());
+            ps.setInt(5, question.getOrderIndex());
 
-            int result = preparedStatement.executeUpdate();
+            int rowAffected = ps.executeUpdate();
 
-            // After question creation, insert the options for the question
-            for (Option option : question.getOptions()) {
-                String optionSql = "INSERT INTO options (question_id, option_text, is_correct) VALUES (?, ?, ?)";
-                PreparedStatement optionStmt = connection.prepareStatement(optionSql, Statement.RETURN_GENERATED_KEYS);
-                optionStmt.setInt(1, question.getQuestionId());
-                optionStmt.setString(2, option.getOptionText());
-                optionStmt.setBoolean(3, option.isCorrect());
-
-                optionStmt.executeUpdate();
+            if (rowAffected > 0) {
+                ResultSet generatedKey = ps.getGeneratedKeys();
+                if (generatedKey.next()) {
+                    questionId = generatedKey.getInt(1);
+                }
+                generatedKey.close();
             }
-
-            return result > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
+            ps.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
-        return false;
+
+        return questionId;
     }
 
     // Get all questions by quizId
-    public List<Question> getQuestionsByQuizId(int quizId) throws SQLException {
+    public List<Question> getQuestionsByQuizId(int quizId) {
+
         List<Question> questions = new ArrayList<>();
-        String sql = "SELECT * FROM questions WHERE quiz_id = ? ORDER BY order_index";
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        preparedStatement.setInt(1, quizId);
-        ResultSet resultSet = preparedStatement.executeQuery();
-
-        while (resultSet.next()) {
+        String selectIdQuery = "SELECT * FROM questions WHERE quiz_id = ? ORDER BY order_index";
+        
+        try{
+            PreparedStatement preparedStatement = con.prepareStatement(selectIdQuery);
+            preparedStatement.setInt(1, quizId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            
             Question question = new Question();
-            question.setQuestionId(resultSet.getInt("question_id"));
-            question.setQuizId(resultSet.getInt("quiz_id"));
-            question.setQuestionText(resultSet.getString("question_text"));
-            question.setType(resultSet.getString("type"));
-            question.setPoints(resultSet.getInt("points"));
-            question.setOrderIndex(resultSet.getInt("order_index"));
+            while (resultSet.next()) {    
+                question.setQuestionID(resultSet.getInt("question_id"));
+                question.setQuizid(resultSet.getInt("quiz_id"));
+                question.setQuestionText(resultSet.getString("question_text"));
+                question.setType(resultSet.getString("type"));
+                question.setPoints(resultSet.getInt("points"));
+                question.setOrderIndex(resultSet.getInt("order_index"));
 
-            // Get options for this question
-            OptionDAO optionDAO = new OptionDAO();
-            List<Option> options = optionDAO.getOptionsByQuestionId(question.getQuestionId());
-            question.setOptions(options);
+                // Get options for this question
+                OptionDAO optionDAO = new OptionDAO();
+                List<Option> options = optionDAO.getOptionByid(question.getQuestionID());
+                question.setOptions(options);
 
-            questions.add(question);
+                questions.add(question);
+            }
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }    
+            return questions;
         }
-
-        return questions;
     }
-}
+// Create new question
+//    public boolean createQuestion(Question question) {
+//        try {
+//            String sql = "INSERT INTO questions (quiz_id, question_text, type, points, order_index) VALUES (?, ?, ?, ?, ?)";
+//            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+//            preparedStatement.setInt(1, question.getQuizId());
+//            preparedStatement.setString(2, question.getQuestionText());
+//            preparedStatement.setString(3, question.getType());
+//            preparedStatement.setInt(4, question.getPoints());
+//            preparedStatement.setInt(5, question.getOrderIndex());
+//
+//            int result = preparedStatement.executeUpdate();
+//
+//            // After question creation, insert the options for the question
+//            for (Option option : question.getOptions()) {
+//                String optionSql = "INSERT INTO options (question_id, option_text, is_correct) VALUES (?, ?, ?)";
+//                PreparedStatement optionStmt = connection.prepareStatement(optionSql, Statement.RETURN_GENERATED_KEYS);
+//                optionStmt.setInt(1, question.getQuestionId());
+//                optionStmt.setString(2, option.getOptionText());
+//                optionStmt.setBoolean(3, option.isCorrect());
+//
+//                optionStmt.executeUpdate();
+//            }
+//
+//            return result > 0;
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//        return false;
+//    }
+//
+

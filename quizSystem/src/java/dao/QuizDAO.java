@@ -10,6 +10,7 @@ package dao;
  */
 import beans.Quiz;
 import beans.DBConnection;
+import com.mysql.cj.xdevapi.Result;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,18 +22,29 @@ public class QuizDAO {
         connection = DBConnection.getConnection();
     }
 
-    public boolean createQuiz(Quiz quiz) {
+    public int createQuiz(Quiz quiz) {
+        
+        int id = -1;
         try {
             String sql = "INSERT INTO quizzes (title, description, is_published, created_by) VALUES (?, ?, ?, ?)";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, quiz.getTitle());
             preparedStatement.setString(2, quiz.getDescription());
-            preparedStatement.setBoolean(3, quiz.isPublished());
+            preparedStatement.setBoolean(3, quiz.isIsPublished());
             preparedStatement.setInt(4, quiz.getCreatedBy());
-            return preparedStatement.executeUpdate() > 0;
+            
+            int rowAffected = preparedStatement.executeUpdate();
+            
+            if( rowAffected > 0){
+                ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+                if(generatedKeys.next()){
+                    id = generatedKeys.getInt(1);
+                }
+            }
         } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return false;
+        return id;
     }
 
     public boolean deleteQuiz(int quizId) {

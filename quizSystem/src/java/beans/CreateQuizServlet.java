@@ -19,8 +19,8 @@ public class CreateQuizServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String title = request.getParameter("title");
-        String description = request.getParameter("description");
-        boolean isPublished = request.getParameter("isPublished") != null;
+        String description = request.getParameter("description") != "" ? request.getParameter("description") : "Good Luck" ;
+        boolean isPublished = Boolean.parseBoolean(request.getParameter("isPublished"));
 
         HttpSession session = request.getSession();
         int createdBy = ((User) session.getAttribute("user")).getUserId();
@@ -28,12 +28,15 @@ public class CreateQuizServlet extends HttpServlet {
         Quiz quiz = new Quiz();
         quiz.setTitle(title);
         quiz.setDescription(description);
-        quiz.setPublished(isPublished);
+        quiz.setIsPublished(isPublished);
         quiz.setCreatedBy(createdBy);
 
         QuizDAO quizDAO = new QuizDAO();
-        if (quizDAO.createQuiz(quiz)) {
-            response.sendRedirect("teacherDashboard.jsp");
+        int id = quizDAO.createQuiz(quiz);
+        
+        if (id > - 1) {
+            session.setAttribute("QuizID", id);
+            response.sendRedirect("addQuestions.jsp");
         } else {
             response.sendRedirect("createQuiz.jsp?error=Error creating quiz");
         }

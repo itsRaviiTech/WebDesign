@@ -49,7 +49,7 @@ public class AttemptQuizServlet extends HttpServlet {
         List<Question> questions = null;
         try {
             questions = questionDAO.getQuestionsByQuizId(quizId);
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(AttemptQuizServlet.class.getName()).log(Level.SEVERE, "Error fetching questions for quizId: " + quizId, ex);
             request.setAttribute("errorMessage", "There was an issue fetching the quiz questions. Please try again later.");
             request.getRequestDispatcher("errorPage.jsp").forward(request, response);

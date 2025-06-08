@@ -36,6 +36,7 @@ public class UserDAO {
             if (resultSet.next()) {
                 user = new User();
                 user.setUserId(resultSet.getInt("user_id"));
+                user.setName(resultSet.getString("name"));
                 user.setEmail(resultSet.getString("email"));
                 user.setPassword(resultSet.getString("password"));
                 user.setRole(resultSet.getString("role"));

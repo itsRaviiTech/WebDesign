@@ -10,35 +10,58 @@ package dao;
  */
 import beans.Option;
 import beans.DBConnection;
-
+import beans.Question;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class OptionDAO {
-    private Connection connection;
+
+    private Connection con;
 
     public OptionDAO() {
-        connection = DBConnection.getConnection();
+        con = DBConnection.getConnection();
     }
 
-    // Get options for a specific question
-    public List<Option> getOptionsByQuestionId(int questionId) throws SQLException {
-        List<Option> options = new ArrayList<>();
-        String sql = "SELECT * FROM options WHERE question_id = ?";
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        preparedStatement.setInt(1, questionId);
-        ResultSet resultSet = preparedStatement.executeQuery();
+    public void insertOptions(Option option, int questionId) {
+        String sql = "INSERT INTO options (question_id, option_text, is_correct) VALUES (?, ?, ?)";
+        try {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, questionId);
+            ps.setString(2, option.getOptionText());
+            ps.setBoolean(3, option.getIsCorrect());
 
-        while (resultSet.next()) {
-            Option option = new Option();
-            option.setOptionId(resultSet.getInt("option_id"));
-            option.setQuestionId(resultSet.getInt("question_id"));
-            option.setOptionText(resultSet.getString("option_text"));
-            option.setCorrect(resultSet.getBoolean("is_correct"));
-            options.add(option);
+            ps.executeUpdate();
+            ps.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public List<Option> getOptionByid(int QuestionID) {
+
+        List<Option> optionsList = new ArrayList<>();
+        String selectOptionQuery = "SELECT * FROM `options` WHERE question_id = ?";
+        try {
+            PreparedStatement ps = con.prepareStatement(selectOptionQuery);
+            ps.setInt(1, QuestionID);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Option option = new Option();
+
+                option.setOptionID(rs.getInt("option_id"));
+                option.setQuestionID(rs.getInt("question_id"));
+                option.setOptionText(rs.getString("option_text"));
+                option.setIsCorrect(rs.getBoolean("is_correct"));
+
+                optionsList.add(option);
+            }
+            ps.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
 
-        return options;
+        return optionsList;
     }
 }
