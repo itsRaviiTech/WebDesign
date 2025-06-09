@@ -1,3 +1,12 @@
+<%-- 
+    Document   : addquestions.jsp
+    Created on : 6 Jun 2025, 7:50:41 pm
+    Author     : User
+--%>
+
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.util.*" %>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,6 +21,7 @@
             <h2>Add Multiple Choice Quiz</h2>
             <form  action="SubmitQuizServlet" method="post" id="quizForm">
                 <input type="hidden" id="questionCount" name="questionCount" value="0" />
+         
                 <div id="quizContainer"></div>
 
                 <div class="text-center mt-4">
@@ -26,5 +36,4 @@
 
         <script src="addQuestions.js"></script>
     </body>
-
 </html>

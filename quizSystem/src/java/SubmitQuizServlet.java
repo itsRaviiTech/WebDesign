@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import beans.Question;
 import beans.Option;
 import beans.Quiz;
+import dao.QuizDAO;
 import dao.QuestionDAO;
 import dao.OptionDAO;
 import java.util.ArrayList;
@@ -63,7 +64,32 @@ public class SubmitQuizServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+
+        // Get quizId from query parameter
+        String quizIdStr = request.getParameter("QuizID");
+        int quizId = Integer.parseInt(quizIdStr);
+
+        QuizDAO quizDAO = new QuizDAO();
+        Quiz quiz = quizDAO.getQuizById(quizId);
+
+        QuestionDAO questionDao = new QuestionDAO();
+        List<Question> questionList = questionDao.getQuestionsByQuizId(quizId);
+
+        OptionDAO optionDao = new OptionDAO();
+        List<Option> optionList = optionDao.getOptionByQuizID(quizId);
+
+        if (quiz == null) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Quiz not found.");
+            return;
+        }
+        
+        // Set quiz and questions in request scope for JSP to use
+        request.setAttribute("quiz", quiz);
+        request.setAttribute("questionList", questionList);
+        request.setAttribute("optionList", optionList);
+
+        request.getRequestDispatcher("EditQuestion.jsp").forward(request, response);
+
     }
 
     /**
@@ -115,7 +141,7 @@ public class SubmitQuizServlet extends HttpServlet {
             question.setOptions(options);
             question.setType("Multiple Choice");
             question.setOrderIndex(i + 1);
-            
+
             questionList.add(question);
 
             questionID = questionDao.insertQuestion(question);
@@ -123,10 +149,9 @@ public class SubmitQuizServlet extends HttpServlet {
                 for (Option option : options) {
                     optionsDao.insertOptions(option, questionID);
                 }
-            response.sendRedirect("teacherDashboard.jsp");
             }
         }
-
+        response.sendRedirect("teacherDashboard.jsp");
     }
 
     /**

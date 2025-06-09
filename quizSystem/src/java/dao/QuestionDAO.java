@@ -11,7 +11,6 @@ package dao;
 import beans.Question;
 import beans.Option;
 import beans.DBConnection;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,19 +53,43 @@ public class QuestionDAO {
         return questionId;
     }
 
+    // Get options for a specific question
+    public boolean UpdateQuestion(Question question) {
+        int questionId = -1;
+
+        String UpdateQuestionquery = "UPDATE questions SET question_text = ?, points = ?, quiz_id = ? WHERE question_id = ?";
+
+        try {
+            PreparedStatement ps = con.prepareStatement(UpdateQuestionquery);
+
+            ps.setString(1, question.getQuestionText());
+            ps.setInt(2, question.getPoints());
+            ps.setInt(3, question.getQuizid());
+            ps.setInt(4, question.getQuestionID());
+            
+            int rowAffected = ps.executeUpdate();
+            ps.close();
+
+            return rowAffected > 0;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
     // Get all questions by quizId
     public List<Question> getQuestionsByQuizId(int quizId) {
 
         List<Question> questions = new ArrayList<>();
         String selectIdQuery = "SELECT * FROM questions WHERE quiz_id = ? ORDER BY order_index";
-        
-        try{
+
+        try {
             PreparedStatement preparedStatement = con.prepareStatement(selectIdQuery);
             preparedStatement.setInt(1, quizId);
             ResultSet resultSet = preparedStatement.executeQuery();
-            
-            Question question = new Question();
-            while (resultSet.next()) {    
+
+            while (resultSet.next()) {
+                Question question = new Question();
                 question.setQuestionID(resultSet.getInt("question_id"));
                 question.setQuizid(resultSet.getInt("quiz_id"));
                 question.setQuestionText(resultSet.getString("question_text"));
@@ -81,12 +104,12 @@ public class QuestionDAO {
 
                 questions.add(question);
             }
-        }catch(Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
-        }    
-            return questions;
         }
+        return questions;
     }
+}
 // Create new question
 //    public boolean createQuestion(Question question) {
 //        try {

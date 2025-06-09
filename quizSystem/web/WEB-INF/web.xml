@@ -4,9 +4,25 @@
         <servlet-name>SubmitQuizServlet</servlet-name>
         <servlet-class>SubmitQuizServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DeleteQuizServlet</servlet-name>
+        <servlet-class>DeleteQuizServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateQuizServlet</servlet-name>
+        <servlet-class>UpdateQuizServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>SubmitQuizServlet</servlet-name>
         <url-pattern>/SubmitQuizServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteQuizServlet</servlet-name>
+        <url-pattern>/DeleteQuizServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateQuizServlet</servlet-name>
+        <url-pattern>/UpdateQuizServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

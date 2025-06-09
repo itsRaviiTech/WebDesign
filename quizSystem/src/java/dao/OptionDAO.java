@@ -38,6 +38,25 @@ public class OptionDAO {
         }
     }
 
+    public boolean UpdateOptionsByOptionID(Option option) {
+
+        String sql = "UPDATE options SET option_text = ?, is_correct = ?  WHERE option_id = ?";
+        try {
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, option.getOptionText());
+            ps.setBoolean(2, option.getIsCorrect());
+            ps.setInt(3, option.getOptionID());
+
+            int rowsAffected = ps.executeUpdate();
+            ps.close();
+
+            return rowsAffected > 0;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
     public List<Option> getOptionByid(int QuestionID) {
 
         List<Option> optionsList = new ArrayList<>();
@@ -63,5 +82,38 @@ public class OptionDAO {
         }
 
         return optionsList;
+    }
+
+    public List<Option> getOptionByQuizID(int QuizID) {
+
+        List<Option> optionList = new ArrayList<>();
+        String selectQuery = "SELECT qs.question_id, op.option_id, op.option_text, op.is_correct\n"
+                + "FROM options op\n"
+                + "JOIN questions qs\n"
+                + "USING(question_id)\n"
+                + "JOIN quizzes qz\n"
+                + "USING(quiz_id)\n"
+                + "WHERE quiz_id = ?";
+        try {
+            PreparedStatement ps = con.prepareStatement(selectQuery);
+            ps.setInt(1, QuizID);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                Option option = new Option();
+                option.setQuestionID(rs.getInt("qs.question_id"));
+                option.setOptionID(rs.getInt("op.option_id"));
+                option.setOptionText(rs.getString("op.option_text"));
+                option.setIsCorrect(rs.getBoolean("op.is_correct"));
+
+                optionList.add(option);
+            }
+            ps.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return optionList;
     }
 }

@@ -4,6 +4,7 @@
  */
 package beans;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -16,6 +17,7 @@ public class Quiz {
     private String description;
     private boolean isPublished;
     private int createdBy;
+    private LocalDate createdAt;
     private List<Question> questions;
 
     public void setQuizId(int quizId) {
@@ -38,6 +40,10 @@ public class Quiz {
         this.createdBy = createdBy;
     }
 
+    public void setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
+    }
+   
     public void setQuestions(List questions) {
         this.questions = questions;
     }
@@ -62,6 +68,10 @@ public class Quiz {
         return createdBy;
     }
 
+    public LocalDate getCreatedAt() {
+        return createdAt;
+    }
+    
     public List getQuestions() {
         return questions;
     }
