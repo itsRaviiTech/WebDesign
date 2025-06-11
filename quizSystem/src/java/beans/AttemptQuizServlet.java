@@ -39,6 +39,7 @@ public class AttemptQuizServlet extends HttpServlet {
         
         Quiz quiz = quizDAO.getQuizById(quizId);
         
+        
         // If quiz not found, redirect to an error page
         if (quiz == null) {
             request.setAttribute("errorMessage", "Quiz not found.");

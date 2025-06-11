@@ -14,9 +14,10 @@ import java.sql.SQLException;
 
 public class DBConnection {
     // Database URL, user, and password for MySQL
-    private static final String URL = "jdbc:mysql://localhost:3307/quizsystem";  // Your database name
+    private static final String URL = "jdbc:mysql://localhost:3306/quizsystem";  // Your database name
     private static final String USER = "root";  // MySQL username
-    private static final String PASSWORD = "admin";  // MySQL password (empty password for root)
+    //private static final String PASSWORD = "admin";  // MySQL password (empty password for root)
+    private static final String PASSWORD = "";  // MySQL password (empty password for root)
 
     public static Connection getConnection() {
         Connection connection = null;
@@ -36,6 +37,7 @@ public class DBConnection {
         } catch (ClassNotFoundException e) {
             // This exception is thrown if the driver class is not found
             System.out.println("JDBC Driver not found: " + e.getMessage());
+            e.printStackTrace();
         } catch (SQLException e) {
             // Print out the error message if connection fails
             System.out.println("Failed to connect to the database: " + e.getMessage());

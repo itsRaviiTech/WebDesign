@@ -43,6 +43,8 @@ public class UserDAO {
                 // you can also store other attributes like name, etc.
             }
         } catch (SQLException e) {
+            System.out.println("Error during authentication: " + e.getMessage());
+            e.printStackTrace();  // Print the stack trace for debugging
         }
         return user;
     }
