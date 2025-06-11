@@ -23,7 +23,8 @@ public class OptionDAO {
         con = DBConnection.getConnection();
     }
 
-    public void insertOptions(Option option, int questionId) {
+    public boolean insertOptions(Option option, int questionId) {
+        int status= -1;
         String sql = "INSERT INTO options (question_id, option_text, is_correct) VALUES (?, ?, ?)";
         try {
             PreparedStatement ps = con.prepareStatement(sql);
@@ -31,10 +32,13 @@ public class OptionDAO {
             ps.setString(2, option.getOptionText());
             ps.setBoolean(3, option.getIsCorrect());
 
-            ps.executeUpdate();
+            status = ps.executeUpdate();
             ps.close();
+            
+            return status > 0;
         } catch (Exception ex) {
             ex.printStackTrace();
+            return false;
         }
     }
 
@@ -115,5 +119,22 @@ public class OptionDAO {
             ex.printStackTrace();
         }
         return optionList;
+    }
+    
+    public Boolean deleteOptionByQuestionID( int questionId){
+        int status = -1;
+        String deleteQuery = "DELETE FROM options WHERE question_id = ?";
+        
+        try{
+            
+            PreparedStatement ps = con.prepareStatement(deleteQuery);
+            ps.setInt(1, questionId);
+            
+            status = ps.executeUpdate();
+            return status > 0; 
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
     }
 }

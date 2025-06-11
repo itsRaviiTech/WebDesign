@@ -12,6 +12,10 @@
         <servlet-name>UpdateQuizServlet</servlet-name>
         <servlet-class>UpdateQuizServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DeleteQuestionServlet</servlet-name>
+        <servlet-class>DeleteQuestionServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>SubmitQuizServlet</servlet-name>
         <url-pattern>/SubmitQuizServlet</url-pattern>
@@ -23,6 +27,10 @@
     <servlet-mapping>
         <servlet-name>UpdateQuizServlet</servlet-name>
         <url-pattern>/UpdateQuizServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteQuestionServlet</servlet-name>
+        <url-pattern>/DeleteQuestionServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

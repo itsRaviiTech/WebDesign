@@ -38,6 +38,15 @@
                     <textarea class="form-control" name="description" required><%= quiz.getDescription()%></textarea>
                 </div>
 
+                <div class="mb-3">
+                    <label class="form-label" for="is_published">Published Status</label>
+                    <select name="is_published" id="is_published" class="form-select" required>
+                        <option value="false">Hidden</option>
+                        <option value="false" <%= !quiz.isIsPublished() ? "selected" : ""%>>Hidden</option>
+                        <option value="true" <%= quiz.isIsPublished() ? "selected" : ""%>>Visible</option>
+                    </select>
+                </div>
+
                 <div id="quizContainer"></div>
 
                 <div class="text-center mt-4">
@@ -54,6 +63,7 @@
 
         <script>
             const existingQuestions = <%= new com.google.gson.Gson().toJson(questions)%>;
+            window.isEditMode = true;
         </script>
         <script src="addQuestions.js"></script>
     </body>

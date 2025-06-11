@@ -120,6 +120,7 @@ public class UpdateQuizServlet extends HttpServlet {
         int quizId = Integer.parseInt(request.getParameter("quizId"));
         String title = request.getParameter("title");
         String description = request.getParameter("description");
+        boolean isPublished = Boolean.parseBoolean(request.getParameter("is_published"));
         int questionCount = Integer.parseInt(request.getParameter("questionCount"));
 
         //create an quiz object
@@ -128,7 +129,8 @@ public class UpdateQuizServlet extends HttpServlet {
         quiz.setQuizId(quizId);
         quiz.setTitle(title);
         quiz.setDescription(description);
-
+        quiz.setIsPublished(isPublished);
+        
         //calling DOA to update to Database
         quizDAO.UpdateQuiz(quiz);
 
@@ -142,7 +144,6 @@ public class UpdateQuizServlet extends HttpServlet {
             int points = Integer.parseInt(request.getParameter("points" + i));
 
             List<Option> optionList = new ArrayList<>();
-            PrintWriter out = response.getWriter();
 
             for (int j = 1; j <= 4; j++) {
                 String optionIdStr = request.getParameter("optionId_" + i + "_" + j);
@@ -185,16 +186,15 @@ public class UpdateQuizServlet extends HttpServlet {
                         throw new Exception("Option update failed for option ID: " + option.getOptionID());
                     }
                 }
-            } catch (Exception e) {
-                System.err.println("Update failed, falling back to insert: " + e.getMessage());
+            } catch (Exception e) {    
                 int questionsID = questionDAO.insertQuestion(question);
                 for (Option option : question.getOptions()) {
-                    optionsDAO.insertOptions(option, questionsID);
+                    boolean optionInsert = optionsDAO.insertOptions(option, questionsID);
                 }
             }
-            
-            
         }
+        
+        request.getRequestDispatcher("viewAllQuizzes.jsp").forward(request, response);
     }
 
     /**

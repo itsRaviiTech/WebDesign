@@ -66,9 +66,14 @@ public class QuizDAO {
         boolean success = false;
 
         try {
-            con.setAutoCommit(false); // start transaction
+            con.setAutoCommit(false);
 
-            try (PreparedStatement psDeleteAnswers = con.prepareStatement(deleteAnswersQuery); PreparedStatement psDeleteSubmissions = con.prepareStatement(deleteSubmissionsQuery); PreparedStatement psDeleteOptions = con.prepareStatement(deleteOptionsQuery); PreparedStatement psDeleteQuestions = con.prepareStatement(deleteQuestionsQuery); PreparedStatement psDeleteQuiz = con.prepareStatement(deleteQuizQuery)) {
+            try {
+                PreparedStatement psDeleteAnswers = con.prepareStatement(deleteAnswersQuery);
+                PreparedStatement psDeleteSubmissions = con.prepareStatement(deleteSubmissionsQuery);
+                PreparedStatement psDeleteOptions = con.prepareStatement(deleteOptionsQuery);
+                PreparedStatement psDeleteQuestions = con.prepareStatement(deleteQuestionsQuery);
+                PreparedStatement psDeleteQuiz = con.prepareStatement(deleteQuizQuery);
 
                 // Delete answers linked to submissions of this quiz
                 psDeleteAnswers.setInt(1, quizId);
@@ -189,6 +194,7 @@ public class QuizDAO {
                 quiz.setQuizId(resultSet.getInt("quiz_id"));
                 quiz.setTitle(resultSet.getString("title"));
                 quiz.setDescription(resultSet.getString("description"));
+                quiz.setIsPublished(resultSet.getBoolean("is_published"));
             }
         } catch (SQLException e) {
         }
@@ -199,11 +205,12 @@ public class QuizDAO {
     public int UpdateQuiz(Quiz quiz) {
         int id = -1;
         try {
-            String sql = "UPDATE quizzes SET title = ?, description = ? WHERE quiz_id = ?";
+            String sql = "UPDATE quizzes SET title = ?, description = ?, is_published = ? WHERE quiz_id = ?";
             PreparedStatement preparedStatement = con.prepareStatement(sql);
             preparedStatement.setString(1, quiz.getTitle());
             preparedStatement.setString(2, quiz.getDescription());
-            preparedStatement.setInt(3, quiz.getQuizId());
+            preparedStatement.setBoolean(3, quiz.isIsPublished());
+            preparedStatement.setInt(4, quiz.getQuizId());
 
             int rowAffected = preparedStatement.executeUpdate();
 
