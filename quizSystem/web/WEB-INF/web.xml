@@ -16,10 +16,6 @@
         <servlet-name>DeleteQuestionServlet</servlet-name>
         <servlet-class>DeleteQuestionServlet</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>RegisterServlet</servlet-name>
-        <servlet-class>beans.RegisterServlet</servlet-class>
-    </servlet>
     <servlet-mapping>
         <servlet-name>SubmitQuizServlet</servlet-name>
         <url-pattern>/SubmitQuizServlet</url-pattern>
@@ -35,10 +31,6 @@
     <servlet-mapping>
         <servlet-name>DeleteQuestionServlet</servlet-name>
         <url-pattern>/DeleteQuestionServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>RegisterServlet</servlet-name>
-        <url-pattern>/RegisterServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
