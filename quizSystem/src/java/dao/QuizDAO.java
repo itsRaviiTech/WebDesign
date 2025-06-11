@@ -163,14 +163,14 @@ public class QuizDAO {
     // Method to fetch all quizzes
     public List<Quiz> getAllQuizzes() {
         List<Quiz> quizzes = new ArrayList<>();
-        String sql = "SELECT * FROM quizzes WHERE is_published = 1";
+        String sql = "SELECT * FROM quizzes";
 
         try {
             Statement statement = con.createStatement();
             ResultSet resultSet = statement.executeQuery(sql);
             while (resultSet.next()) {
                 Quiz quiz = new Quiz();
-                quiz.setQuizId(resultSet.getInt("quiz_id"));
+                quiz.setQuizId(resultSet.getInt("id"));
                 quiz.setTitle(resultSet.getString("title"));
                 quiz.setDescription(resultSet.getString("description"));
                 quizzes.add(quiz);

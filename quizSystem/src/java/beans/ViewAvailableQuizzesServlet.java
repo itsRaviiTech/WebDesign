@@ -25,9 +25,6 @@ public class ViewAvailableQuizzesServlet extends HttpServlet {
         QuizDAO quizDAO = new QuizDAO();
         List<Quiz> quizzes = quizDAO.getAllQuizzes();  // Fetch all quizzes
 
-        // Log the quizzes to check if data is being fetched
-        System.out.println("Fetched quizzes: " + quizzes.size());  // This will print the number of quizzes
-        
         // Set quizzes as request attribute
         request.setAttribute("quizzes", quizzes);
 
