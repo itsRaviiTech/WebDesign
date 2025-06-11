@@ -13,6 +13,7 @@ import beans.DBConnection;
 import java.sql.*;
 
 public class UserDAO {
+
     private Connection connection;
 
     public UserDAO() {
@@ -47,6 +48,23 @@ public class UserDAO {
             e.printStackTrace();  // Print the stack trace for debugging
         }
         return user;
+    }
+
+    public boolean registerUser(User user) {
+        String sql = "INSERT INTO users (name, email, password, role, created_at) VALUES (?, ?, ?, ?, NOW())";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, user.getName());
+            preparedStatement.setString(2, user.getEmail());
+            preparedStatement.setString(3, user.getPassword());
+            preparedStatement.setString(4, user.getRole());
+
+            int rowsInserted = preparedStatement.executeUpdate();
+            return rowsInserted > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 }
