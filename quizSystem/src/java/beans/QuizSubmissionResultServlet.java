@@ -9,12 +9,13 @@ import javax.servlet.*;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.sql.*;
-import beans.DBConnection; // your connection utility
 
 @WebServlet("/quiz-result")
 public class QuizSubmissionResultServlet extends HttpServlet {
+
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
+            throws ServletException, IOException {
 
         int submissionId = Integer.parseInt(request.getParameter("submissionId"));
         int earnedPoints = 0;
@@ -28,28 +29,26 @@ public class QuizSubmissionResultServlet extends HttpServlet {
         ResultSet rs = null;
 
         try {
-            conn = DBConnection.getConnection(); // your DAO
+            conn = DBConnection.getConnection();
 
-            // ✅ Step 1: Mark correct answers
-            String updateCorrectSQL = """
-                UPDATE answer a
-                JOIN option o ON a.selected_option_id = o.option_id
-                SET a.is_correct = o.is_correct
-                WHERE a.submission_id = ?
-            """;
+            // Step 1: Mark correct answers
+            String updateCorrectSQL
+                    = "UPDATE answer a "
+                    + "JOIN option o ON a.selected_option_id = o.option_id "
+                    + "SET a.is_correct = o.is_correct "
+                    + "WHERE a.submission_id = ?";
             updateCorrectStmt = conn.prepareStatement(updateCorrectSQL);
             updateCorrectStmt.setInt(1, submissionId);
             updateCorrectStmt.executeUpdate();
 
-            // ✅ Step 2: Calculate earned and total points
-            String scoreCalcSQL = """
-                SELECT 
-                    SUM(CASE WHEN a.is_correct = 1 THEN q.points ELSE 0 END) AS earned_points,
-                    SUM(q.points) AS total_points
-                FROM answer a
-                JOIN question q ON a.question_id = q.question_id
-                WHERE a.submission_id = ?
-            """;
+            // Step 2: Calculate earned and total points
+            String scoreCalcSQL
+                    = "SELECT "
+                    + "SUM(CASE WHEN a.is_correct = 1 THEN q.points ELSE 0 END) AS earned_points, "
+                    + "SUM(q.points) AS total_points "
+                    + "FROM answer a "
+                    + "JOIN question q ON a.question_id = q.question_id "
+                    + "WHERE a.submission_id = ?";
             scoreCalcStmt = conn.prepareStatement(scoreCalcSQL);
             scoreCalcStmt.setInt(1, submissionId);
             rs = scoreCalcStmt.executeQuery();
@@ -62,18 +61,17 @@ public class QuizSubmissionResultServlet extends HttpServlet {
                 }
             }
 
-            // ✅ Step 3: Update submission record
-            String updateSubmissionSQL = """
-                UPDATE submission
-                SET score = ?, submitted_at = NOW()
-                WHERE submission_id = ?
-            """;
+            // Step 3: Update submission record
+            String updateSubmissionSQL
+                    = "UPDATE submission "
+                    + "SET score = ?, submitted_at = NOW() "
+                    + "WHERE submission_id = ?";
             updateSubmissionStmt = conn.prepareStatement(updateSubmissionSQL);
             updateSubmissionStmt.setInt(1, scorePercentage);
             updateSubmissionStmt.setInt(2, submissionId);
             updateSubmissionStmt.executeUpdate();
 
-            // ✅ Step 4: Show results
+            // Step 4: Show results
             request.setAttribute("scorePercentage", scorePercentage);
             request.setAttribute("earnedPoints", earnedPoints);
             request.setAttribute("totalPoints", totalPoints);
@@ -83,12 +81,42 @@ public class QuizSubmissionResultServlet extends HttpServlet {
             e.printStackTrace();
             response.sendError(500, "Error calculating quiz result.");
         } finally {
-            // You can use your own close method or Java 7 try-with-resources
-            try { if (rs != null) rs.close(); } catch (Exception e) {}
-            try { if (updateCorrectStmt != null) updateCorrectStmt.close(); } catch (Exception e) {}
-            try { if (scoreCalcStmt != null) scoreCalcStmt.close(); } catch (Exception e) {}
-            try { if (updateSubmissionStmt != null) updateSubmissionStmt.close(); } catch (Exception e) {}
-            try { if (conn != null) conn.close(); } catch (Exception e) {}
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (updateCorrectStmt != null) {
+                    updateCorrectStmt.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (scoreCalcStmt != null) {
+                    scoreCalcStmt.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (updateSubmissionStmt != null) {
+                    updateSubmissionStmt.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
+
 }
