@@ -70,7 +70,6 @@ public class AttemptQuizServlet extends HttpServlet {
         submission.setQuizId(quiz.getQuizId());
 //        PrintWriter out = response.getWriter();
 
-
         StudentDAO studentDao = new StudentDAO();
         int submissionID = studentDao.insertSubmission(submission);
         for (Question q : question) {
@@ -82,8 +81,9 @@ public class AttemptQuizServlet extends HttpServlet {
             answer.setSelectedOptionId(selectedOptionId);
             studentDao.insertAnswers(answer);
         }
-        
-        request.getRequestDispatcher("grade-submission?submissionId=" + submissionID).forward(request, response);
+
+        session.setAttribute("submissionId", submissionID);
+       response.sendRedirect("GradeSubmissionServlet?submissionId=" + submissionID);
 
     }
 

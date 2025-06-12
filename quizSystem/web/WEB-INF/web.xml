@@ -6,6 +6,11 @@
         <servlet-class>SubmitQuizServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>GradeSubmissionServlet</servlet-name>
+        <servlet-class>beans.GradeSubmissionServlet</servlet-class>
+    </servlet>
+
+    <servlet>
         <servlet-name>DeleteQuizServlet</servlet-name>
         <servlet-class>DeleteQuizServlet</servlet-class>
     </servlet>
@@ -32,6 +37,10 @@
     <servlet-mapping>
         <servlet-name>DeleteQuestionServlet</servlet-name>
         <url-pattern>/DeleteQuestionServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GradeSubmissionServlet</servlet-name>
+        <url-pattern>/GradeSubmissionServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

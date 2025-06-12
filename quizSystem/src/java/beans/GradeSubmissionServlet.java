@@ -18,7 +18,6 @@ import java.sql.*;
  *
  * @author ravib
  */
-@WebServlet("/grade-submission")
 public class GradeSubmissionServlet extends HttpServlet {
 
     @Override
