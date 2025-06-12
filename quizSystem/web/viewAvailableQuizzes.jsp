@@ -62,7 +62,7 @@
                         <dd class="col-sm-9"><%= quiz.getDescription() %></dd>
                     </dl>
                     <div class="d-flex justify-content-end gap-2">
-                        <a href="AttemptQuizServlet?QuizID=<%= quiz.getQuizId() %>" class="btn btn-outline-primary">Attempt</a>
+                        <a href="AttemptQuizServlet?quizID=<%= quiz.getQuizId() %>" class="btn btn-outline-primary">Attempt</a>
                     </div>
                 </div>
             </div>

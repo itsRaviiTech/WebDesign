@@ -15,30 +15,31 @@
     <body>
         <%
             Quiz quiz = (Quiz) request.getAttribute("quizForAttempt");
-            List<Question> questions = (List<Question>) request.getAttribute("questionForAttempt");
+            List<Question> questions = (List<Question>) session.getAttribute("questionForAttempt");
             if (questions == null) {
                 questions = new ArrayList<>();
             }
         %>
 
         <div class="container mt-5">
-            <h2>Quiz ID: <%= quiz.getTitle()%></h2>
-
-            <!-- Hidden container for JS to render quiz -->
-            <div id="quizContainer"></div>
-
-            <div class="text-center mt-4">
-                <button type="button" id="submitQuiz" class="btn btn-primary btn-lg">Submit Quiz</button>
+            <div class="text-center m-2">
+                <h2>Quiz ID: <%= quiz.getTitle()%></h2>
             </div>
-        </div>
+            <form action="AttemptQuizServlet" method="post">
+                <!-- Hidden container for JS to render quiz -->
+                <div id="quizContainer"></div>
 
-        <%
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg">Submit Quiz</button>
+                </div>
+            </form>
+        </div>
+             <%
             String jsonQuestions = new com.google.gson.Gson().toJson(questions);
         %>
         <pre><%= jsonQuestions%></pre>
-
         <script>
-            const quizData = <%= new com.google.gson.Gson().toJson(questions)%>;
+        const quizData = <%= new com.google.gson.Gson().toJson(questions)%>;
         </script>
         <script src="studentSide.js"></script>
     </body>

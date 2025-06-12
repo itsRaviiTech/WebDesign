@@ -76,6 +76,10 @@ public class Question {
     public List<Option> getOptions() {
         return options;
     }
+
+    public int getQuestionId() {
+        return questionID;
+    }
 }  
     
     
