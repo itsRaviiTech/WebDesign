@@ -33,7 +33,7 @@ public class ViewResultsServlet extends HttpServlet {
         SubmissionDAO submissionDAO = new SubmissionDAO();
         List<Submission> results = null;
         try {
-            results = submissionDAO.getSubmissionsByUserId(user.getUserId());
+            results = submissionDAO.getResultsByUser(user.getUserId());
         } catch (SQLException ex) {
             Logger.getLogger(ViewResultsServlet.class.getName()).log(Level.SEVERE, null, ex);
         }

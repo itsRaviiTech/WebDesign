@@ -68,14 +68,11 @@ public class AttemptQuizServlet extends HttpServlet {
         Submission submission = new Submission();
         submission.setUserId(user.getUserId());
         submission.setQuizId(quiz.getQuizId());
-        PrintWriter out = response.getWriter();
+//        PrintWriter out = response.getWriter();
 
-        out.print(submission.getUserId());
-        out.print(submission.getQuizId());
 
         StudentDAO studentDao = new StudentDAO();
         int submissionID = studentDao.insertSubmission(submission);
-        out.print(submissionID);
         for (Question q : question) {
             Answer answer = new Answer();
             String paramName = "question_" + q.getQuestionID(); // Use q.getQuestionID() not q.getQuestionId() if your method is like this
@@ -85,6 +82,8 @@ public class AttemptQuizServlet extends HttpServlet {
             answer.setSelectedOptionId(selectedOptionId);
             studentDao.insertAnswers(answer);
         }
+        
+        request.getRequestDispatcher("grade-submission?submissionId=" + submissionID).forward(request, response);
 
     }
 
