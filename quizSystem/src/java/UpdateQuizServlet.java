@@ -17,7 +17,6 @@ import dao.QuizDAO;
 import dao.OptionDAO;
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.SQLException;
 import java.util.Map;
 
 /**
