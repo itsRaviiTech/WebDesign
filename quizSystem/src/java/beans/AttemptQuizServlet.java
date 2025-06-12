@@ -11,6 +11,9 @@ package beans;
 import dao.QuizDAO;
 import dao.QuestionDAO;
 import dao.OptionDAO;
+import dao.StudentDAO;
+import dao.AnswerDAO;
+import beans.Submission;
 import beans.Quiz;
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -45,7 +48,7 @@ public class AttemptQuizServlet extends HttpServlet {
         }
         HttpSession session = request.getSession();
 
-        request.setAttribute("quizForAttempt", quiz);
+        session.setAttribute("quizForAttempt", quiz);
         session.setAttribute("questionForAttempt", question);
         request.setAttribute("optionForAttempt", optionList);
 
@@ -58,15 +61,29 @@ public class AttemptQuizServlet extends HttpServlet {
             throws ServletException, IOException {
 
         HttpSession session = request.getSession();
-
         List<Question> question = (List<Question>) session.getAttribute("questionForAttempt");
-        String[] questionIds = {"101", "102"};
+        Quiz quiz = (Quiz) session.getAttribute("quizForAttempt");
+        User user = (User) session.getAttribute("user");
+
+        Submission submission = new Submission();
+        submission.setUserId(user.getUserId());
+        submission.setQuizId(quiz.getQuizId());
         PrintWriter out = response.getWriter();
+
+        out.print(submission.getUserId());
+        out.print(submission.getQuizId());
+
+        StudentDAO studentDao = new StudentDAO();
+        int submissionID = studentDao.insertSubmission(submission);
+        out.print(submissionID);
         for (Question q : question) {
-            
+            Answer answer = new Answer();
             String paramName = "question_" + q.getQuestionID(); // Use q.getQuestionID() not q.getQuestionId() if your method is like this
-            String selectedOptionId = request.getParameter(paramName);
-            out.println("Question ID: " + q.getQuestionID() + " → Selected Option ID: " + selectedOptionId);
+            int selectedOptionId = Integer.parseInt(request.getParameter(paramName));
+            answer.setSubmissionId(submissionID);
+            answer.setQuestionId(q.getQuestionID());
+            answer.setSelectedOptionId(selectedOptionId);
+            studentDao.insertAnswers(answer);
         }
 
     }

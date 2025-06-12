@@ -64,54 +64,62 @@ public class StudentDAO {
         return quizzes;
     }
 
-    public int insertSubmission(Submission submission) throws SQLException {
-        String sql = "INSERT INTO submission (user_id, quiz_id, score, submitted_at) VALUES (?, ?, ?, NOW())";
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
+    public int insertSubmission(Submission submission) {
+        String sql = "INSERT INTO submissions (user_id, quiz_id, submitted_at) VALUES (?, ?, NOW())";
         int submissionId = -1;
 
-        try {
-            stmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        if (submission == null) {
+            System.err.println("Submission object is null.");
+            return -1;
+        }
+
+        try (
+                PreparedStatement stmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setInt(1, submission.getUserId());
             stmt.setInt(2, submission.getQuizId());
-            stmt.setFloat(3, submission.getScore()); // might be 0 at this stage
 
             int rowsInserted = stmt.executeUpdate();
-            if (rowsInserted > 0) {
-                rs = stmt.getGeneratedKeys();
-                if (rs.next()) {
-                    submissionId = rs.getInt(1);
+
+            if (rowsInserted == 0) {
+                System.err.println("Insert failed, no rows affected.");
+                return -1;
+            }
+
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    submissionId = generatedKeys.getInt(1);
+                    System.out.println("Submission inserted with ID: " + submissionId);
+                } else {
+                    System.err.println("Insert succeeded but no ID obtained.");
                 }
             }
-        } finally {
-            if (rs != null) {
-                rs.close();
-            }
-            if (stmt != null) {
-                stmt.close();
-            }
+
+        } catch (SQLException e) {
+            System.err.println("SQL Exception during insertSubmission: " + e.getMessage());
+            e.printStackTrace();
         }
 
         return submissionId;
     }
 
-    public void insertAnswers(List<Answer> answers) throws SQLException {
+    public void insertAnswers(Answer answers) {
         String sql = "INSERT INTO answer (submission_id, question_id, selected_option_id) VALUES (?, ?, ?)";
         PreparedStatement stmt = null;
 
         try {
             stmt = con.prepareStatement(sql);
-            for (Answer ans : answers) {
-                stmt.setInt(1, ans.getSubmissionId());
-                stmt.setInt(2, ans.getQuestionId());
-                stmt.setInt(3, ans.getSelectedOptionId());
-                stmt.addBatch(); // Add to batch
-            }
-            stmt.executeBatch(); // Execute batch insert
-        } finally {
+
+            stmt.setInt(1, answers.getSubmissionId());
+            stmt.setInt(2, answers.getQuestionId());
+            stmt.setInt(3, answers.getSelectedOptionId());
+
+            stmt.executeUpdate(); // Execute batch insert
+
             if (stmt != null) {
                 stmt.close();
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 

@@ -14,7 +14,7 @@
     </head>
     <body>
         <%
-            Quiz quiz = (Quiz) request.getAttribute("quizForAttempt");
+            Quiz quiz = (Quiz) session.getAttribute("quizForAttempt");
             List<Question> questions = (List<Question>) session.getAttribute("questionForAttempt");
             if (questions == null) {
                 questions = new ArrayList<>();
