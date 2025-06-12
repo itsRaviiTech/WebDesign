@@ -18,7 +18,6 @@ import java.sql.*;
  *
  * @author ravib
  */
-@WebServlet("/grade-submission")
 public class GradeSubmissionServlet extends HttpServlet {
 
     @Override
@@ -31,6 +30,7 @@ public class GradeSubmissionServlet extends HttpServlet {
         try {
             conn = DBConnection.getConnection();
             int totalScore = 0;
+            int totalAvailablePoints = 0;
 
             // 1. Get all answers for this submission
             String answerSQL = "SELECT answer_id, question_id, selected_option_id FROM answer WHERE submission_id = ?";
@@ -44,16 +44,17 @@ public class GradeSubmissionServlet extends HttpServlet {
                 int selectedOptionId = rs.getInt("selected_option_id");
                 int isCorrect = 0;
 
-                // 2. Check if selected option is correct (1 = correct, 0 = wrong)
-                String checkSQL = "SELECT is_correct FROM option WHERE option_id = ?";
+                // 2. Check if selected option is correct
+                String checkSQL = "SELECT is_correct FROM options WHERE option_id = ?";
                 PreparedStatement checkStmt = conn.prepareStatement(checkSQL);
                 checkStmt.setInt(1, selectedOptionId);
                 ResultSet checkRs = checkStmt.executeQuery();
+
                 if (checkRs.next() && checkRs.getInt("is_correct") == 1) {
                     isCorrect = 1;
 
                     // 3. If correct, get question points
-                    String pointSQL = "SELECT points FROM question WHERE question_id = ?";
+                    String pointSQL = "SELECT points FROM questions WHERE question_id = ?";
                     PreparedStatement pointStmt = conn.prepareStatement(pointSQL);
                     pointStmt.setInt(1, questionId);
                     ResultSet pointRs = pointStmt.executeQuery();
@@ -63,6 +64,7 @@ public class GradeSubmissionServlet extends HttpServlet {
                     pointRs.close();
                     pointStmt.close();
                 }
+
                 checkRs.close();
                 checkStmt.close();
 
@@ -75,24 +77,52 @@ public class GradeSubmissionServlet extends HttpServlet {
                 updateStmt.close();
             }
 
+            rs.close();
+            stmt.close();
+
             // 5. Update score in submission table
-            String updateSubmissionSQL = "UPDATE submission SET score = ? WHERE submission_id = ?";
+            String updateSubmissionSQL = "UPDATE submissions SET score = ? WHERE submission_id = ?";
             PreparedStatement updateSubmissionStmt = conn.prepareStatement(updateSubmissionSQL);
             updateSubmissionStmt.setInt(1, totalScore);
             updateSubmissionStmt.setInt(2, submissionId);
             updateSubmissionStmt.executeUpdate();
             updateSubmissionStmt.close();
 
-            // 6. Redirect to result page
-            request.setAttribute("score", totalScore);
-//            request.setAttribute("totalPoints", totalAvailablePoints);
-            request.getRequestDispatcher("quizResult.jsp").forward(request, response);
+            // 6. Get total possible score for this quiz
+            String totalPointsSQL = "SELECT SUM(points) AS totalPoints FROM questions WHERE quiz_id = (SELECT quiz_id FROM submissions WHERE submission_id = ?)";
+            PreparedStatement totalPointsStmt = conn.prepareStatement(totalPointsSQL);
+            totalPointsStmt.setInt(1, submissionId);
+            ResultSet totalPointsRs = totalPointsStmt.executeQuery();
+            if (totalPointsRs.next()) {
+                totalAvailablePoints = totalPointsRs.getInt("totalPoints");
+            }
+            totalPointsRs.close();
+            totalPointsStmt.close();
 
-            response.sendRedirect("quiz-result.jsp?submissionId=" + submissionId);
+            // 7. Forward to results page
+            request.setAttribute("score", totalScore);
+            request.setAttribute("totalPoints", totalAvailablePoints);
+            request.setAttribute("submissionId", submissionId);
+            request.getRequestDispatcher("quizResult.jsp").forward(request, response);
 
         } catch (Exception e) {
             e.printStackTrace();
             response.getWriter().println("Error: " + e.getMessage());
-        } 
+        } finally {
+            // close connection (optional cleanup block)
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
     }
 }

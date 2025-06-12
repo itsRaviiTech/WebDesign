@@ -42,11 +42,26 @@
                     <dt>Title</dt>
                     <dd class="text-center"><%= quiz.getTitle() %></dd>
 
-                    <dt>Description</dt>
-                    <dd class="text-center"><%= quiz.getDescription() %></dd>
-                </dl>
-                <div class="quiz-actions">
-                    <a href="AttemptQuizServlet?QuizID=<%= quiz.getQuizId() %>" class="btn">Attempt</a>
+        // Check if quizList is not null and has data
+        if (quizList != null && !quizList.isEmpty()) {
+            int noQuiz = 1;  // To number the quizzes
+            for (Quiz quiz : quizList) {
+    %>
+        <div class="container my-4">
+            <div class="card shadow-hover rounded">
+                <div class="card-body">
+                    <h4 class="card-title text-center mb-3">Quiz <%= noQuiz %></h4>
+                    <dl class="row mb-4 px-3">
+                        <dt class="col-sm-3">Quiz ID</dt>
+                        <dd class="col-sm-9"><%= quiz.getQuizId() %></dd>
+                        <dt class="col-sm-3">Title</dt>
+                        <dd class="col-sm-9"><%= quiz.getTitle() %></dd>
+                        <dt class="col-sm-3">Description</dt>
+                        <dd class="col-sm-9"><%= quiz.getDescription() %></dd>
+                    </dl>
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="AttemptQuizServlet?quizID=<%= quiz.getQuizId() %>" class="btn btn-outline-primary">Attempt</a>
+                    </div>
                 </div>
             </div>
         </div>

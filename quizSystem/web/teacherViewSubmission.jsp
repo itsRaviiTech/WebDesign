@@ -2,32 +2,29 @@
 <%@ page import="java.util.*, beans.*, dao.*" %>
 <jsp:useBean id="user" class="beans.User" scope="session" />
 <%
-
-
     SubmissionDAO submissionDAO = new SubmissionDAO();
-    List<Submission> submissions = submissionDAO.getSubmissionsByUserId(user.getUserId());
+    List<Submission> submissions = submissionDAO.getSubmissionsForTeacher(user.getUserId());
     request.setAttribute("submissions", submissions);
 %>
 
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="UTF-8">
-    <title>Teacher - View Submissions</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-        <jsp:include page="header.jsp" />
-    <div class="container">
-        <h2>Student Submissions</h2>
+    <head>
+        <meta charset="UTF-8">
+        <title>Teacher - View Submissions</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <div class="container">
+            <h2>Student Submissions</h2>
 
-        <%
-            if (submissions == null || submissions.isEmpty()) {
-        %>
+            <%
+                if (submissions == null || submissions.isEmpty()) {
+            %>
             <p class="error-message">No quiz submissions found for your quizzes yet.</p>
-        <%
+            <%
             } else {
-        %>
+            %>
             <table class="results-table">
                 <thead>
                     <tr>
@@ -43,8 +40,9 @@
                         for (Submission sub : submissions) {
                     %>
                     <tr>
-                        <td><%= sub.getUserId()%></td>
-                        <td><%= sub.getQuizId()%></td>
+                        <td><%= sub.getStudentName()%></td>
+                        <td><%= sub.getQuizTitle()%></td>
+                        <td><%= sub.getSubmittedAt()%></td>
                         <td><%= sub.getScore()%></td>
                         <td>
                             <a href="view_submission_detail.jsp?submissionID=<%= sub.getSubmissionId()%>" class="btn">View</a>
@@ -55,10 +53,9 @@
                     %>
                 </tbody>
             </table>
-        <%
-            }
-        %>
-    </div>
-    <jsp:include page="footer.jsp" />
-</body>
+            <%
+                }
+            %>
+        </div>
+    </body>
 </html>
