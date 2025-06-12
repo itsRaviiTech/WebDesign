@@ -8,7 +8,7 @@
 <html>
     <head>
         <title>Create Quiz</title>
-        <!--    <link rel="stylesheet" type="text/css" href="styles.css">-->
+        <link rel="stylesheet" type="text/css" href="styles.css">
 
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -36,6 +36,8 @@
     </head>
 
     <body>
+            <jsp:include page="header.jsp" />
+
         <form action="CreateQuizServlet" method="post" class="container w-50 mt-5 bg-light p-4 rounded shadow">
             <h2 class="text-center mt-1 mb-4">Quiz Creation Form</h2>
 
@@ -57,7 +59,7 @@
         </form>
         
         <script src="addQuestions.js"></script>
-        
+        <jsp:include page="footer.jsp" />
     </body>
 
 </html>

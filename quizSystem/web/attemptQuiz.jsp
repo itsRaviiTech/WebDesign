@@ -10,9 +10,12 @@
 <html>
     <head>
         <title>Attempt Quiz</title>
+        <link rel="stylesheet" type="text/css" href="styles.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     </head>
     <body>
+        <jsp:include page="header.jsp" />
+
         <%
             Quiz quiz = (Quiz) request.getAttribute("quizForAttempt");
             List<Question> questions = (List<Question>) request.getAttribute("questionForAttempt");
@@ -41,5 +44,7 @@
             const quizData = <%= new com.google.gson.Gson().toJson(questions)%>;
         </script>
         <script src="studentSide.js"></script>
+            <jsp:include page="footer.jsp" />
+
     </body>
 </html>

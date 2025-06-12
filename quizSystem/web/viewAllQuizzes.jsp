@@ -27,6 +27,7 @@
         </style>
     </head>  
     <body class="bg-light">
+        <jsp:include page="header.jsp" />
         <jsp:useBean id="user" class="beans.User" scope="session" />
         <%
             int userID = user.getUserId();
@@ -75,6 +76,6 @@
             noQuiz++;
            }
         %>
+        <jsp:include page="footer.jsp" />
     </body>
-</body>
 </html>

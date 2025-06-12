@@ -13,69 +13,60 @@
 <html>
 <head>
     <title>Available Quizzes</title>
-    <link rel="stylesheet" type="text/css" href="styles.css">
-    <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />-->
-    <style>
-        .shadow-hover {
-            transition: box-shadow 0.3s ease, transform 0.3s ease;
-        }
-
-        .shadow-hover:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.35);
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="styles.css"> <!-- Ensure the correct link -->
 </head>
 
 <body class="bg-light">
+    <jsp:include page="header.jsp" />
+
+<%
+    StudentDAO studentDao = new StudentDAO();
+    List<Quiz> quizList = studentDao.getAvailableQuizzesForStudent();
+
+    if (quizList != null && !quizList.isEmpty()) {
+        int noQuiz = 1;
+%>
+
+<!-- Wrap everything in ONE container -->
+<div class="container">
     <h2 class="text-center my-4">Available Quizzes</h2>
 
-    <!-- Link to go back to Student Dashboard -->
-    <div class="container mb-4">
-        <a href="studentDashboard.jsp" class="btn btn-outline-secondary">Back to Student Dashboard</a>
-    </div>
+    <% for (Quiz quiz : quizList) { %>
+        <div class="quiz-card shadow-hover rounded">
+            <div class="quiz-card-body">
+                <h4 class="quiz-title text-center mb-3">Quiz <%= noQuiz %></h4>
+                <dl class="quiz-details">
+                    <dt>Quiz ID</dt>
+                    <dd class="text-center"><%= quiz.getQuizId() %></dd>
 
-    <%
-        
-        StudentDAO studentDao = new StudentDAO();
-        List<Quiz> quizList = new ArrayList<>();
-        
-        quizList = studentDao.getAvailableQuizzesForStudent();
-        // Retrieve the list of quizzes from the request attribute
-        //List<Quiz> quizList = (List<Quiz>) request.getAttribute("quizzes");
+                    <dt>Title</dt>
+                    <dd class="text-center"><%= quiz.getTitle() %></dd>
 
-        // Check if quizList is not null and has data
-        if (quizList != null && !quizList.isEmpty()) {
-            int noQuiz = 1;  // To number the quizzes
-            for (Quiz quiz : quizList) {
-    %>
-        <div class="container my-4">
-            <div class="card shadow-hover rounded">
-                <div class="card-body">
-                    <h4 class="card-title text-center mb-3">Quiz <%= noQuiz %></h4>
-                    <dl class="row mb-4 px-3">
-                        <dt class="col-sm-3">Quiz ID</dt>
-                        <dd class="col-sm-9"><%= quiz.getQuizId() %></dd>
-                        <dt class="col-sm-3">Title</dt>
-                        <dd class="col-sm-9"><%= quiz.getTitle() %></dd>
-                        <dt class="col-sm-3">Description</dt>
-                        <dd class="col-sm-9"><%= quiz.getDescription() %></dd>
-                    </dl>
-                    <div class="d-flex justify-content-end gap-2">
-                        <a href="AttemptQuizServlet?QuizID=<%= quiz.getQuizId() %>" class="btn btn-outline-primary">Attempt</a>
-                    </div>
+                    <dt>Description</dt>
+                    <dd class="text-center"><%= quiz.getDescription() %></dd>
+                </dl>
+                <div class="quiz-actions">
+                    <a href="AttemptQuizServlet?QuizID=<%= quiz.getQuizId() %>" class="btn">Attempt</a>
                 </div>
             </div>
         </div>
-    <%
-            noQuiz++;  // Increment the quiz number
-            }
-        } else {
-    %>
-        <p class="text-center">No quizzes available at the moment.</p>
-        <a href="studentDashboard.jsp" class="btn btn-outline-secondary">Back to Student Dashboard</a>
-    <%
-        }
-    %>
+    <% noQuiz++; } %>
+
+    <!-- This button stays INSIDE the same container, at the bottom -->
+    <div class="quiz-actions">
+        <a href="studentDashboard.jsp" class="btn">Back to Student Dashboard</a>
+    </div>
+</div>
+
+<% } else { %>
+    <div class="container">
+        <h2 class="text-center my-4">Available Quizzes</h2>
+        <div class="alert text-center">No quizzes available at the moment.</div>
+        <div class="quiz-actions">
+            <a href="studentDashboard.jsp" class="btn">Back to Student Dashboard</a>
+        </div>
+    </div>
+<% } %>
+    <jsp:include page="footer.jsp" />
 </body>
 </html>

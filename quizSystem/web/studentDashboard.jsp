@@ -8,16 +8,24 @@
 <head>
     <title>Student Dashboard</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
+    
 </head>
 <body>
-    <h1>Welcome, Student!</h1>
-    <p>View and attempt your quizzes below:</p>
+        <jsp:include page="header.jsp" />
 
-    <!-- Link to view available quizzes -->
-    <a href="viewAvailableQuizzes.jsp">View Available Quizzes</a><br/>
+    <!-- Container for content -->
+    <div class="container">
+        <!-- Header -->
+        <h1>Welcome, Student!</h1>
+        <!-- Subheader -->
+        <p>View and attempt your quizzes below:</p>
 
-    <!-- Link to view submitted results -->
-    <a href="viewResults.jsp">View My Results</a><br/>
+        <!-- Link to view available quizzes -->
+        <a href="viewAvailableQuizzes.jsp" class="box-link">View Available Quizzes</a>
 
+        <!-- Link to view submitted results -->
+        <a href="viewResults.jsp" class="box-link">View My Results</a>
+    </div>
+    <jsp:include page="footer.jsp" />
 </body>
 </html>

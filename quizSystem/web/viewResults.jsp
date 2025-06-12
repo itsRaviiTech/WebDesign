@@ -13,6 +13,8 @@
     <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
+        <jsp:include page="header.jsp" />
+
     <h2>Your Quiz Results</h2>
 
     <c:if test="${not empty results}">
@@ -42,6 +44,7 @@
 
     <br/>
     <a href="studentDashboard.jsp">Back to Student Dashboard</a>  <!-- Optional, if needed -->
+    <jsp:include page="footer.jsp" />
 </body>
 </html>
 

@@ -8,6 +8,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 */
 /* Container for full login page */
 body > div {
+    background-color: #efa3a0;
     display: flex;
     height: 100vh;
 }
@@ -15,7 +16,7 @@ body > div {
 /* Image section */
 .login-image {
     flex: 1;
-    background-color: #eaf1f6;
+    background-color: #f8f9fa; /* Light grey  #eaf1f6;*/
     display: flex;
     align-items: center;
     justify-content: center;
@@ -37,6 +38,7 @@ body > div {
     padding: 40px;
     background-color: white;
     align-items: center;
+    border-left: 1px solid #ddd; /* Subtle border for separation */
 }
 
 .login-form form {
@@ -53,6 +55,7 @@ body > div {
 .login-form label {
     font-weight: bold;
     margin: 10px 0 5px;
+    color: #493129; /* Dark brown for text */
 }
 
 .login-form input,
@@ -60,7 +63,36 @@ body > div {
     padding: 12px;
     margin-bottom: 15px;
     font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ddd; /* Subtle border */
 }
+
+/* Input field colors */
+.login-form input {
+    background-color: #e9ecef; /* Soft light grey */
+    color: #333; /* Dark text for input fields */
+}
+
+/* Input focus effect */
+.login-form input:focus {
+    background-color: #ffffff; /* White when focused */
+    border-color: #8b597b; /* Mauve border on focus */
+    outline: none; /* Remove default outline */
+}
+
+/* Button Colors */
+.login-form button {
+    background-color: #8b597b; /* Mauve */
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.login-form button:hover {
+    background-color: #efa3a0; /* Light coral on hover */
+}
+
 
 /* Error message styling */
 .error-message {
@@ -86,16 +118,17 @@ body > div {
 
 h2{
     margin-bottom: 20px;
-    
+    color: #493129; /* Dark brown for header */
 }
 
 .register-text {
     margin-top: 20px;
     font-size: 14px;
+    color: #333; /* Dark grey text for the register link */
 }
 
 .register-text a {
-    color: #007bff;
+    color: #007bff; /* Blue for register link */
     text-decoration: none;
 }
 

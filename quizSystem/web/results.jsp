@@ -13,6 +13,8 @@
 
 </head>
 <body>
+        <jsp:include page="header.jsp" />
+
     <h2>Your Quiz Results</h2>
     <ul>
         <%
@@ -22,5 +24,6 @@
             <li>Quiz: <%= submission.getQuiz().getTitle() %> - Score: <%= submission.getScore() %></li>
         <% } %>
     </ul>
+    <jsp:include page="footer.jsp" />
 </body>
 </html>

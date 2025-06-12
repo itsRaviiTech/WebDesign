@@ -7,7 +7,7 @@
 <html>
     <head>
         <title>Teacher Dashboard</title>
-<!--        <link rel="stylesheet" type="text/css" href="styles.css">-->
+        <link rel="stylesheet" type="text/css" href="styles.css">
 
         <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -21,6 +21,7 @@
     </head>
 
     <body>
+            <jsp:include page="header.jsp" />
         <jsp:useBean id="user" class="beans.User" scope="session" />
         
         <div class="container d-flex align-items-center justify-content-center flex-column ">
@@ -70,6 +71,7 @@
                 </div>
             </div>
         </div>
+                <jsp:include page="footer.jsp" />
     </body>
 
 </html>

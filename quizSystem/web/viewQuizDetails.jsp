@@ -13,6 +13,7 @@
     <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
+        <jsp:include page="header.jsp" />
     <h2>Quiz Details</h2>
 
     <c:if test="${not empty quiz}">
@@ -26,5 +27,6 @@
 
     <br/><br/>
     <a href="viewAllQuizzes.jsp">Back to All Quizzes</a>
+    <jsp:include page="footer.jsp" />
 </body>
 </html>

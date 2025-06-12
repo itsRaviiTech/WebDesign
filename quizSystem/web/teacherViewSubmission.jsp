@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+        <jsp:include page="header.jsp" />
     <div class="container">
         <h2>Student Submissions</h2>
 
@@ -58,5 +59,6 @@
             }
         %>
     </div>
+    <jsp:include page="footer.jsp" />
 </body>
 </html>

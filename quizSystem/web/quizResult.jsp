@@ -34,6 +34,8 @@
         </style>
     </head>
     <body>
+            <jsp:include page="header.jsp" />
+
         <div class="container">
             <h1>Quiz Submitted!</h1>
 
@@ -50,5 +52,6 @@
                 <a href="student_dashboard.jsp">← Back to Dashboard</a>
             </div>
         </div>
+            <jsp:include page="footer.jsp" />
     </body>
 </html>
