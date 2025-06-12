@@ -14,7 +14,7 @@ import java.sql.SQLException;
 
 public class DBConnection {
     // Database URL, user, and password for MySQL
-    private static final String URL = "jdbc:mysql://localhost:3306/quizsystem";  // Your database name
+    private static final String URL = "jdbc:mysql://localhost:3307/quizsystem";  // Your database name
     private static final String USER = "root";  // MySQL username
     private static final String PASSWORD = "admin";  // MySQL password (empty password for root)
 
