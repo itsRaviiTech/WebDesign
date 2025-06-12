@@ -26,8 +26,16 @@ public class ViewQuizzesServlet extends HttpServlet {
         QuizDAO quizDAO = new QuizDAO();
         List<Quiz> quizzes = quizDAO.getAllQuizzes();
 
+        // Debugging: Print out the size of the quizzes list to ensure it's not empty
+        System.out.println("Number of quizzes fetched: " + quizzes.size());
+
         // Set quizzes as request attribute to display in the JSP
         request.setAttribute("quizzes", quizzes);
+
+        // Debugging: Print out each quiz title to ensure quizzes are being fetched
+        for (Quiz quiz : quizzes) {
+            System.out.println("Quiz Title: " + quiz.getTitle());
+        }
 
         // Forward the request to viewAllQuizzes.jsp
         RequestDispatcher dispatcher = request.getRequestDispatcher("viewAllQuizzes.jsp");
