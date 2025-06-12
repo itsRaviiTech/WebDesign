@@ -17,20 +17,25 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-        
+
         User user = authenticateUser(email, password);
 
         if (user != null) {
             // User authenticated successfully
             HttpSession session = request.getSession();
-            session.setAttribute("user", user);  // Save user in session
+            session.setAttribute("user", user);  // Save the user object in the session
+            
             System.out.println("User authenticated: " + (user != null)); // Debug line
             System.out.println("User role: " + user.getRole()); // Debug line
 
             // Redirect to the appropriate dashboard based on the role
-            if (user.getRole().equals("Teacher")) {
+            if ("Teacher".equals(user.getRole())) {
+                // Store a teacher-specific session attribute
+                session.setAttribute("teacher", user);
                 response.sendRedirect("teacherDashboard.jsp");  // Redirect to Teacher's dashboard
-            } else if (user.getRole().equals("Student")) {
+            } else if ("Student".equals(user.getRole())) {
+                // Store a student-specific session attribute
+                session.setAttribute("student", user);
                 response.sendRedirect("studentDashboard.jsp");  // Redirect to Student's dashboard
             }
         } else {

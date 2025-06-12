@@ -13,6 +13,7 @@ import java.util.*;
 
 @WebServlet("/view-submissions")
 public class ViewSubmissionsServlet extends HttpServlet {
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
 
@@ -23,28 +24,39 @@ public class ViewSubmissionsServlet extends HttpServlet {
             return;
         }
 
-        int teacherId = user.getUserId();
-        List<SubmittedQuiz> submissions = new ArrayList<>();
+        int teacherId = user.getUserId();  // Get the teacher's ID from the session
+        List<SubmittedQuiz> submissions = new ArrayList<>();  // List to hold the submissions
 
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            // Load MySQL JDBC driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            // Establish connection to the database
             Connection conn = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/your_db_name", "your_db_user", "your_db_pass");
+                "jdbc:mysql://localhost:3306/quizsystem", "root", "");  // Your database credentials
 
-            String sql = """
-                SELECT sq.submission_id, sq.quiz_id, sq.student_id, u.username AS student_name,
-                       sq.submission_date, q.title AS quiz_title
-                FROM submitted_quiz sq
-                JOIN quiz q ON sq.quiz_id = q.quiz_id
-                JOIN users u ON sq.student_id = u.user_id
-                WHERE q.teacher_id = ?
-                ORDER BY sq.submission_date DESC
-            """;
+            // SQL query written using string concatenation for JDK 8
+            String sql = "SELECT " +
+                         "sq.submission_id, " +
+                         "sq.quiz_id, " +
+                         "sq.user_id AS student_id, " +
+                         "u.username AS student_name, " +
+                         "sq.submitted_at AS submission_date, " +
+                         "q.title AS quiz_title " +
+                         "FROM submissions sq " +
+                         "JOIN quiz q ON sq.quiz_id = q.quiz_id " +
+                         "JOIN users u ON sq.user_id = u.user_id " +
+                         "WHERE q.created_by = ? " +  // Filter by teacher's ID
+                         "ORDER BY sq.submitted_at DESC";
 
+            // Prepare the statement and set the teacher ID
             PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(1, teacherId);
+            stmt.setInt(1, teacherId);  // Set teacher's ID in the query
+
+            // Execute the query
             ResultSet rs = stmt.executeQuery();
 
+            // Process the result set and create SubmittedQuiz objects
             while (rs.next()) {
                 SubmittedQuiz s = new SubmittedQuiz();
                 s.setSubmissionId(rs.getInt("submission_id"));
@@ -53,14 +65,17 @@ public class ViewSubmissionsServlet extends HttpServlet {
                 s.setStudentName(rs.getString("student_name"));
                 s.setSubmissionDate(rs.getTimestamp("submission_date"));
                 s.setQuizTitle(rs.getString("quiz_title"));
-                submissions.add(s);
+                submissions.add(s);  // Add each submission to the list
             }
 
+            // Close the connection
             conn.close();
+
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace();  // Print any errors
         }
 
+        // Set the submissions as a request attribute and forward to JSP
         request.setAttribute("submissions", submissions);
         request.getRequestDispatcher("teacher_view_submissions.jsp").forward(request, response);
     }
