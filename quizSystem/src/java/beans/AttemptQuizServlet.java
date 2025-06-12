@@ -8,64 +8,62 @@ package beans;
  *
  * @author User
  */
-
 import dao.QuizDAO;
 import dao.QuestionDAO;
-
+import dao.OptionDAO;
+import beans.Quiz;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.*;
-import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.servlet.annotation.WebServlet;
 
+@WebServlet("/AttemptQuizServlet")
 public class AttemptQuizServlet extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int quizId = Integer.parseInt(request.getParameter("quizId"));
         
-        // Checking user session for logged-in status
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
+        //get Quiz info
+        QuizDAO quizDao = new QuizDAO();
+        Quiz quiz = quizDao.getQuizById(quizId);
         
-        if (user == null) {
-            response.sendRedirect("login.jsp");  // Redirect to login if the user is not logged in
-            return;
-        }
-
-        QuizDAO quizDAO = new QuizDAO();
-        QuestionDAO questionDAO = new QuestionDAO();
+        QuestionDAO questionDao = new QuestionDAO();
+        List<Question> question = questionDao.getQuestionsByQuizId(quizId);
         
-        Quiz quiz = quizDAO.getQuizById(quizId);
+        OptionDAO optionDao = new OptionDAO();
+        List<Option> optionList = optionDao.getOptionByQuizID(quizId);
         
-        // If quiz not found, redirect to an error page
+         // If quiz not found, redirect to an error page
         if (quiz == null) {
             request.setAttribute("errorMessage", "Quiz not found.");
             request.getRequestDispatcher("errorPage.jsp").forward(request, response);
             return;
         }
         
-        List<Question> questions = null;
-        try {
-            questions = questionDAO.getQuestionsByQuizId(quizId);
-        } catch (Exception ex) {
-            Logger.getLogger(AttemptQuizServlet.class.getName()).log(Level.SEVERE, "Error fetching questions for quizId: " + quizId, ex);
-            request.setAttribute("errorMessage", "There was an issue fetching the quiz questions. Please try again later.");
-            request.getRequestDispatcher("errorPage.jsp").forward(request, response);
-            return;
-        }
+        request.setAttribute("quizForAttempt", quiz);
+        request.setAttribute("questionForAttempt", question);
+        request.setAttribute("optionForAttempt", optionList);
         
-        // Check if there are no questions
-        if (questions == null || questions.isEmpty()) {
-            request.setAttribute("errorMessage", "No questions available for this quiz.");
-            request.getRequestDispatcher("errorPage.jsp").forward(request, response);
-            return;
-        }
-
-        // Pass the quiz and questions to the JSP
-        request.setAttribute("quiz", quiz);
-        request.setAttribute("questions", questions);
         request.getRequestDispatcher("attemptQuiz.jsp").forward(request, response);
+
+   }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        
     }
+
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
 }

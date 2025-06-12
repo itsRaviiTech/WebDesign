@@ -227,7 +227,7 @@ public class QuizDAO {
     ////// KIRTIE
     
     // Method to fetch all quizzes
-    public List<Quiz> getAllAvailableQuizzes( int quizID) {
+    public List<Quiz> getAllAvailableQuizzes() {
         List<Quiz> quizzes = new ArrayList<>();
         String sql = "SELECT * FROM quizzes WHERE is_published = 1";
 

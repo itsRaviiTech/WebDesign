@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 </div>
             </div>
 
-            <button type="button" class="btn btn-sm btn-danger mb-2"  onclick="deleteQuestion(this, '${questionData?.questionID}')">Delete Question</button>
+            <button type="button" class="btn btn-sm btn-danger mb-2" onclick="deleteQuestion(this, ${questionData?.questionID !== undefined ? `'${questionData.questionID}'` : 'null'})">Delete Question</button>
 
             <div class="mb-3">
                 <input type="hidden" name="questionId${index}" value="${questionData?.questionID ?? -1}">
@@ -165,7 +165,7 @@ select.addEventListener('change', function () {
         this.classList.remove('text-danger');
         this.classList.add('text-success');
     } else {
-        this.classList.remove('text-success', 'text-danger')
+        this.classList.remove('text-success', 'text-danger');
     }
 });
 

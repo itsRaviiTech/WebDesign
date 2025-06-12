@@ -4,30 +4,42 @@
     Author     : User
 --%>
 
+<%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
 <%@ page import="beans.Quiz, beans.Question, beans.Option" %>
 <html>
-<head>
-    <title>Attempt Quiz</title>
-    <link rel="stylesheet" type="text/css" href="styles.css">
-</head>
-<body>
-    <h2>Quiz: <%= request.getAttribute("quiz").getTitle() %></h2>
-    <form action="SubmitQuizServlet" method="POST">
-        <input type="hidden" name="quizId" value="<%= request.getAttribute("quiz").getQuizId() %>" />
+    <head>
+        <title>Attempt Quiz</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    </head>
+    <body>
         <%
-            List<Question> questions = (List<Question>) request.getAttribute("questions");
-            for (Question question : questions) {
+            Quiz quiz = (Quiz) request.getAttribute("quizForAttempt");
+            List<Question> questions = (List<Question>) request.getAttribute("questionForAttempt");
+            if (questions == null) {
+                questions = new ArrayList<>();
+            }
         %>
-            <p><%= question.getQuestionText() %></p>
-            <%
-                List<Option> options = question.getOptions();
-                for (Option option : options) {
-            %>
-                <input type="radio" name="question_<%= question.getQuestionId() %>" value="<%= option.getOptionId() %>" /> <%= option.getOptionText() %><br/>
-            <% } %>
-        <% } %>
-        <button type="submit">Submit Quiz</button>
-    </form>
-</body>
+
+        <div class="container mt-5">
+            <h2>Quiz ID: <%= quiz.getTitle()%></h2>
+
+            <!-- Hidden container for JS to render quiz -->
+            <div id="quizContainer"></div>
+
+            <div class="text-center mt-4">
+                <button type="button" id="submitQuiz" class="btn btn-primary btn-lg">Submit Quiz</button>
+            </div>
+        </div>
+
+        <%
+            String jsonQuestions = new com.google.gson.Gson().toJson(questions);
+        %>
+        <pre><%= jsonQuestions%></pre>
+
+        <script>
+            const quizData = <%= new com.google.gson.Gson().toJson(questions)%>;
+        </script>
+        <script src="studentSide.js"></script>
+    </body>
 </html>

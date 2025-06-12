@@ -33,10 +33,6 @@
                 </div>
             </form>
         </div>
-   
-        <script src="addQuestions.js">
-            window.isEditMode = false;
-        </script>
         
         <script src="addQuestions.js"></script>
     </body>
