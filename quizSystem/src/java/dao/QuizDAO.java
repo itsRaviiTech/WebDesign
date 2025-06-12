@@ -10,21 +10,18 @@ package dao;
  */
 import beans.Quiz;
 import beans.DBConnection;
+import com.mysql.cj.xdevapi.Result;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDate;
 
 public class QuizDAO {
 
-    private final Connection con;
+    private Connection con;
 
     public QuizDAO() {
         con = DBConnection.getConnection();
-        if (con == null) {
-            System.out.println("Failed to establish database connection.");
-        } else {
-            System.out.println("Database connection established.");
-        }
     }
 
     public int createQuiz(Quiz quiz) {
@@ -47,6 +44,7 @@ public class QuizDAO {
                 }
             }
         } catch (SQLException e) {
+            e.printStackTrace();
         }
         return id;
     }
@@ -102,10 +100,12 @@ public class QuizDAO {
                 success = (rowsAffected > 0);
             } catch (SQLException e) {
                 con.rollback();
+                e.printStackTrace();
             } finally {
                 con.setAutoCommit(true);
             }
         } catch (SQLException e) {
+            e.printStackTrace();
         }
 
         return success;
@@ -139,22 +139,23 @@ public class QuizDAO {
                 + "WHERE created_by = ?";
 
         try {
-            try (PreparedStatement ps = con.prepareStatement(selectQuizQuery)) {
-                ps.setInt(1, userId);
-                ResultSet rs = ps.executeQuery();
-                
-                while (rs.next()) {
-                    Quiz quiz = new Quiz();
-                    quiz.setQuizId(rs.getInt("quiz_id"));
-                    quiz.setTitle(rs.getString("title"));
-                    quiz.setDescription(rs.getString("description"));
-                    quiz.setCreatedAt(rs.getDate("created_date").toLocalDate());
-                    quiz.setIsPublished(rs.getBoolean("is_published"));
-                    
-                    quizzes.add(quiz);
-                }
+            PreparedStatement ps = con.prepareStatement(selectQuizQuery);
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Quiz quiz = new Quiz();
+                quiz.setQuizId(rs.getInt("quiz_id"));
+                quiz.setTitle(rs.getString("title"));
+                quiz.setDescription(rs.getString("description"));
+                quiz.setCreatedAt(rs.getDate("created_date").toLocalDate());
+                quiz.setIsPublished(rs.getBoolean("is_published"));
+
+                quizzes.add(quiz);
             }
-        } catch (SQLException ex) {
+            ps.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
         return quizzes;
     }
@@ -204,7 +205,6 @@ public class QuizDAO {
     public int UpdateQuiz(Quiz quiz) {
         int id = -1;
         try {
-<<<<<<< Updated upstream
             String sql = "UPDATE quizzes SET title = ?, description = ?, is_published = ? WHERE quiz_id = ?";
             PreparedStatement preparedStatement = con.prepareStatement(sql);
             preparedStatement.setString(1, quiz.getTitle());
@@ -216,21 +216,10 @@ public class QuizDAO {
 
             if (rowAffected > 0) {
                 id = quiz.getQuizId();  // Return the existing quizId since update succeeded
-=======
-            String sql = "UPDATE quizzes SET title = ?, description = ? WHERE quiz_id = ?";
-            try (PreparedStatement preparedStatement = con.prepareStatement(sql)) {
-                preparedStatement.setString(1, quiz.getTitle());
-                preparedStatement.setString(2, quiz.getDescription());
-                preparedStatement.setInt(3, quiz.getQuizId());
-                
-                int rowAffected = preparedStatement.executeUpdate();
-                
-                if (rowAffected > 0) {
-                    id = quiz.getQuizId();  // Return the existing quizId since update succeeded
-                }
->>>>>>> Stashed changes
             }
+            preparedStatement.close();
         } catch (SQLException e) {
+            e.printStackTrace();
         }
         return id;
     }

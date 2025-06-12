@@ -18,7 +18,7 @@ import java.util.List;
 
 public class QuestionDAO {
 
-    private final Connection con;
+    private Connection con;
 
     public QuestionDAO() {
         con = DBConnection.getConnection();
@@ -30,24 +30,25 @@ public class QuestionDAO {
 
         String insertQuestionQuery = "INSERT INTO questions (quiz_id, question_text, type, points, order_index) VALUES (?, ?, ?, ?, ?)";
         try {
-            try (PreparedStatement ps = con.prepareStatement(insertQuestionQuery, Statement.RETURN_GENERATED_KEYS)) {
-                ps.setInt(1, question.getQuizid());
-                ps.setString(2, question.getQuestionText());
-                ps.setString(3, question.getType());
-                ps.setInt(4, question.getPoints());
-                ps.setInt(5, question.getOrderIndex());
-                
-                int rowAffected = ps.executeUpdate();
-                
-                if (rowAffected > 0) {
-                    try (ResultSet generatedKey = ps.getGeneratedKeys()) {
-                        if (generatedKey.next()) {
-                            questionId = generatedKey.getInt(1);
-                        }
-                    }
+            PreparedStatement ps = con.prepareStatement(insertQuestionQuery, Statement.RETURN_GENERATED_KEYS);
+            ps.setInt(1, question.getQuizid());
+            ps.setString(2, question.getQuestionText());
+            ps.setString(3, question.getType());
+            ps.setInt(4, question.getPoints());
+            ps.setInt(5, question.getOrderIndex());
+
+            int rowAffected = ps.executeUpdate();
+
+            if (rowAffected > 0) {
+                ResultSet generatedKey = ps.getGeneratedKeys();
+                if (generatedKey.next()) {
+                    questionId = generatedKey.getInt(1);
                 }
+                generatedKey.close();
             }
-        } catch (SQLException ex) {
+            ps.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
 
         return questionId;
@@ -55,41 +56,38 @@ public class QuestionDAO {
 
     // Get options for a specific question
     public boolean UpdateQuestion(Question question) {
-<<<<<<< Updated upstream
 
         String UpdateQuestionquery = "UPDATE questions SET question_text = ?, points = ?, quiz_id = ? WHERE question_id = ?";
 
         try {
             PreparedStatement ps = con.prepareStatement(UpdateQuestionquery);
 
-=======
-        String updateQuestionQuery = "UPDATE questions SET question_text = ?, points = ?, quiz_id = ?, order_index = ? WHERE question_id = ?";
-        try (PreparedStatement ps = con.prepareStatement(updateQuestionQuery)) {
->>>>>>> Stashed changes
             ps.setString(1, question.getQuestionText());
             ps.setInt(2, question.getPoints());
             ps.setInt(3, question.getQuizid());
-            ps.setInt(4, question.getOrderIndex());
-            ps.setInt(5, question.getQuestionID());
+            ps.setInt(4, question.getQuestionID());
+            
+            int rowAffected = ps.executeUpdate();
+            ps.close();
 
-            int rowsAffected = ps.executeUpdate();
-            return rowsAffected > 0;
-        } catch (SQLException ex) {
+            return rowAffected > 0;
+        } catch (Exception ex) {
+            ex.printStackTrace();
             return false;
         }
     }
 
-
     // Get all questions by quizId
     public List<Question> getQuestionsByQuizId(int quizId) {
+
         List<Question> questions = new ArrayList<>();
-        String selectQuestionsQuery = "SELECT * FROM questions WHERE quiz_id = ? ORDER BY order_index";
+        String selectIdQuery = "SELECT * FROM questions WHERE quiz_id = ? ORDER BY order_index";
 
-        try (PreparedStatement ps = con.prepareStatement(selectQuestionsQuery)) {
-            ps.setInt(1, quizId);
-            ResultSet resultSet = ps.executeQuery();
+        try {
+            PreparedStatement preparedStatement = con.prepareStatement(selectIdQuery);
+            preparedStatement.setInt(1, quizId);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-            // Iterate through each question and retrieve associated options
             while (resultSet.next()) {
                 Question question = new Question();
                 question.setQuestionID(resultSet.getInt("question_id"));
@@ -101,13 +99,13 @@ public class QuestionDAO {
 
                 // Get options for this question
                 OptionDAO optionDAO = new OptionDAO();
-                List<Option> options = optionDAO.getOptionByQuestionId(question.getQuestionID());
+                List<Option> options = optionDAO.getOptionByid(question.getQuestionID());
                 question.setOptions(options);
 
-                // Add the question with options to the list
                 questions.add(question);
             }
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
         return questions;
     }
