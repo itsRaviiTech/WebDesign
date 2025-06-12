@@ -47,5 +47,4 @@ public class Option {
         return isCorrect;
     }
 
-
 }

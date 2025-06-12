@@ -8,6 +8,7 @@ package beans;
  *
  * @author User
  */
+import java.util.ArrayList;
 import java.util.List;
 
 public class Question {
@@ -75,8 +76,6 @@ public class Question {
     public List<Option> getOptions() {
         return options;
     }
-
-
 }  
     
     

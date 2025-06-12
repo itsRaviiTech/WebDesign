@@ -4,22 +4,23 @@
     Author     : User
 --%>
 
-<%@ page import="java.util.List" %>
+<%@page import="java.util.List"%>
 <%@ page import="beans.Submission" %>
-
 <html>
 <head>
     <title>Your Quiz Results</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
+
 </head>
 <body>
     <h2>Your Quiz Results</h2>
-    
     <ul>
-        <c:forEach var="submission" items="${submissions}">
-            <li>Quiz: ${submission.quiz.title} - Score: ${submission.score}</li>
-        </c:forEach>
+        <%
+            List<Submission> submissions = (List<Submission>) request.getAttribute("submissions");
+            for (Submission submission : submissions) {
+        %>
+            <li>Quiz: <%= submission.getQuiz().getTitle() %> - Score: <%= submission.getScore() %></li>
+        <% } %>
     </ul>
 </body>
 </html>
-

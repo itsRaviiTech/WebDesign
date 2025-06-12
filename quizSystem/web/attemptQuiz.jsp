@@ -4,35 +4,29 @@
     Author     : User
 --%>
 
-<%@ page import="java.util.List" %>
+<%@page import="java.util.List"%>
 <%@ page import="beans.Quiz, beans.Question, beans.Option" %>
-
 <html>
 <head>
     <title>Attempt Quiz</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
-    <script>
-        // Function to confirm before submitting the quiz
-        function confirmSubmit() {
-            const userConfirmed = confirm("Are you sure you want to submit the quiz? This action is irreversible.");
-            return userConfirmed; // Submit form if confirmed
-        }
-    </script>
 </head>
 <body>
-    <h2>Quiz: ${quiz.title}</h2>  <!-- Using EL for clean attribute access -->
-    
-    <form action="SubmitQuizServlet" method="POST" onsubmit="return confirmSubmit()">
-        <input type="hidden" name="quizId" value="${quiz.quizId}" />
-        
-        <c:forEach var="question" items="${questions}">
-            <p>${question.questionText}</p> <!-- Using EL for question text -->
-
-            <c:forEach var="option" items="${question.options}">
-                <input type="radio" name="question_${question.questionId}" value="${option.optionId}" /> ${option.optionText}<br/>
-            </c:forEach>
-        </c:forEach>
-
+    <h2>Quiz: <%= request.getAttribute("quiz").getTitle() %></h2>
+    <form action="SubmitQuizServlet" method="POST">
+        <input type="hidden" name="quizId" value="<%= request.getAttribute("quiz").getQuizId() %>" />
+        <%
+            List<Question> questions = (List<Question>) request.getAttribute("questions");
+            for (Question question : questions) {
+        %>
+            <p><%= question.getQuestionText() %></p>
+            <%
+                List<Option> options = question.getOptions();
+                for (Option option : options) {
+            %>
+                <input type="radio" name="question_<%= question.getQuestionId() %>" value="<%= option.getOptionId() %>" /> <%= option.getOptionText() %><br/>
+            <% } %>
+        <% } %>
         <button type="submit">Submit Quiz</button>
     </form>
 </body>

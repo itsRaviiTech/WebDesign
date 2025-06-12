@@ -11,16 +11,6 @@
 <head>
     <title>Available Quizzes</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
-    <script>
-        // Function to confirm before navigating to attempt quiz page
-        function confirmAttempt(quizId) {
-            const userConfirmed = confirm("Are you sure you want to attempt this quiz?");
-            if (userConfirmed) {
-                // Redirect the student to the attempt quiz page with the quiz ID
-                window.location.href = `attemptQuiz.jsp?quizId=${quizId}`;
-            }
-        }
-    </script>
 </head>
 <body>
     <h2>Available Quizzes</h2>
@@ -40,7 +30,7 @@
                         <td>${quiz.title}</td>
                         <td>${quiz.description}</td>
                         <td>
-                            <button onclick="confirmAttempt(${quiz.id})">Attempt</button> |
+                            <a href="attemptQuiz.jsp?quizId=${quiz.id}">Attempt</a> |
                             <a href="viewQuizDetails.jsp?quizId=${quiz.id}">View Details</a>
                         </td>
                     </tr>
