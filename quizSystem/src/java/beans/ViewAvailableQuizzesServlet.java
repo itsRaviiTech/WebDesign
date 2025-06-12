@@ -24,6 +24,8 @@ public class ViewAvailableQuizzesServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         QuizDAO quizDAO = new QuizDAO();
         List<Quiz> quizzes = quizDAO.getAllQuizzes();  // Fetch all quizzes
+        
+        
 
         // Set quizzes as request attribute
         request.setAttribute("quizzes", quizzes);
