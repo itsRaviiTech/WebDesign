@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SubmissionDAO {
+
     private final Connection connection;
 
     public SubmissionDAO() {
@@ -57,27 +58,40 @@ public class SubmissionDAO {
     }
 
     // Get submissions by userId
-    public List<Submission> getSubmissionsByUserId(int userId) throws SQLException {
+    public List<Submission> getSubmissionsForTeacher(int teacherId) throws SQLException {
         List<Submission> submissions = new ArrayList<>();
-        String sql = "SELECT * FROM submissions WHERE user_id = ?";
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        preparedStatement.setInt(1, userId);
-        ResultSet resultSet = preparedStatement.executeQuery();
 
-        while (resultSet.next()) {
-            Submission submission = new Submission();
-            submission.setSubmissionId(resultSet.getInt("submission_id"));
-            submission.setUserId(resultSet.getInt("user_id"));
-            submission.setQuizId(resultSet.getInt("quiz_id"));
-            submission.setScore(resultSet.getFloat("score"));
-            submission.setSubmittedAt(resultSet.getString("submitted_at"));
+        String sql = "SELECT s.submission_id, s.user_id, s.quiz_id, s.score, s.submitted_at, "
+                + "u.name AS student_name, "
+                + "q.title AS quiz_title "
+                + "FROM submissions s "
+                + "JOIN quizzes q ON s.quiz_id = q.quiz_id "
+                + "JOIN users u ON s.user_id = u.user_id "
+                + "WHERE q.created_by = ? "
+                + "ORDER BY s.submitted_at DESC";
 
-            submissions.add(submission);
+        try (Connection conn = DBConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, teacherId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Submission submission = new Submission();
+                submission.setSubmissionId(rs.getInt("submission_id"));
+                submission.setUserId(rs.getInt("user_id"));
+                submission.setQuizId(rs.getInt("quiz_id"));
+                submission.setScore(rs.getFloat("score"));
+                submission.setSubmittedAt(rs.getString("submitted_at"));
+                submission.setStudentName(rs.getString("student_name"));
+                submission.setQuizTitle(rs.getString("quiz_title"));
+
+                submissions.add(submission);
+            }
         }
 
         return submissions;
     }
-    
+
     public List<Submission> getResultsByUser(int userId) throws SQLException {
         List<Submission> results = new ArrayList<>();
         String sql = "SELECT * FROM submissions WHERE user_id = ? ORDER BY submitted_at DESC";
