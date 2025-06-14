@@ -41,8 +41,6 @@
             <!-- Link to view available quizzes -->
             <a href="viewAvailableQuizzes.jsp" class="box-link">View Available Quizzes</a>
 
-            <!-- Link to view submitted results -->
-            <a href="viewResults.jsp" class="box-link">View My Results</a>
         </main>
         <jsp:include page="footer.jsp" />
     </body>
