@@ -263,7 +263,7 @@ h2 {
 
 .social-icons i {
     color: #fff; /* White icons on hover */
-        transition: color 0.3s ease, transform 0.3s ease;
+    transition: color 0.3s ease, transform 0.3s ease;
     padding: 6px;
 }
 
@@ -423,37 +423,43 @@ input[type="submit"]:hover, button:hover {
     text-decoration: none;
     cursor: pointer;
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    body {
-        font-size: 14px;
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        body {
+            font-size: 14px;
+        }
+
+        h2 {
+            font-size: 28px;
+        }
+
+        .quiz-card {
+            padding: 15px;
+            margin-left: auto;
+            margin-right: auto; /* Ensures the cards are centered */
+        }
+
+        .quiz-title {
+            font-size: 20px;
+        }
+
+        .quiz-details dd {
+            font-size: 14px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+        .quiz-actions a {
+            font-size: 14px;
+            padding: 8px 16px;
+        }
     }
 
-    h2 {
-        font-size: 28px;
+    .hover-shadow:hover {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        transition: box-shadow 0.3s ease-in-out;
+        transform: translateY(-2px);
     }
-
-    .quiz-card {
-        padding: 15px;
-        margin-left: auto;
-        margin-right: auto; /* Ensures the cards are centered */
-    }
-
-    .quiz-title {
-        font-size: 20px;
-    }
-
-    .quiz-details dd {
-        font-size: 14px;
-    }
-
-    .btn {
-        padding: 8px 16px;
-        font-size: 14px;
-    }
-    .quiz-actions a {
-        font-size: 14px;
-        padding: 8px 16px;
-    }
-}
 }
