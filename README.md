@@ -60,6 +60,7 @@ The system enhances educational efficiency, reduces administrative workload, and
 5. **Deploy Project to Tomcat**
    - Open your IDE and import the project.
    - Set up Apache Tomcat as the server.
+   - IF error occur due to missing jar file, can be located at /github/WebDesign/JAR
    - [IMPORTANT] Make sure in the project property that it is using **JDK 8**
    - Clean and build the project.
    - Run the project. Access it at:  
