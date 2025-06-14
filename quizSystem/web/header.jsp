@@ -15,7 +15,7 @@
             <img src="logo.png" alt="Logo" style="height: 40px; margin-right: 12px;">
             <span class="header-title">Quiz Management System</span>
         </div>
-        <a class="btn btn-outline-primary btn-logout" href="logout.jsp">Logout</a>
+        <a class="btn btn-outline-primary btn-logout" href="${pageContext.request.contextPath}/LogoutServlet">Logout</a>
     </div>
 </header>
 

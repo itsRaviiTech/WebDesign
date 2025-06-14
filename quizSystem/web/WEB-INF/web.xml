@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
-   
     <servlet>
         <servlet-name>SubmitQuizServlet</servlet-name>
         <servlet-class>SubmitQuizServlet</servlet-class>
@@ -9,7 +8,6 @@
         <servlet-name>GradeSubmissionServlet</servlet-name>
         <servlet-class>beans.GradeSubmissionServlet</servlet-class>
     </servlet>
-
     <servlet>
         <servlet-name>DeleteQuizServlet</servlet-name>
         <servlet-class>DeleteQuizServlet</servlet-class>
@@ -21,6 +19,10 @@
     <servlet>
         <servlet-name>DeleteQuestionServlet</servlet-name>
         <servlet-class>DeleteQuestionServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>LogoutServlet</servlet-name>
+        <servlet-class>beans.LogoutServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>SubmitQuizServlet</servlet-name>
@@ -41,6 +43,10 @@
     <servlet-mapping>
         <servlet-name>GradeSubmissionServlet</servlet-name>
         <url-pattern>/GradeSubmissionServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LogoutServlet</servlet-name>
+        <url-pattern>/LogoutServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
