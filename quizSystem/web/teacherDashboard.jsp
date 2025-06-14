@@ -55,8 +55,10 @@
                     laudantium, dignissimos aut.
                 </p>
 
-                <a  href="createQuiz.jsp" class="btn bg-dark text-white rounded-sm mt-3 me-2">Create new quiz</a>
-                <a href="viewAllQuizzes.jsp" class="btn border-dark text-muted mt-3">View my quiz</a>
+                <a href="createQuiz.jsp" class="btn bg-dark text-white rounded-sm mt-3 me-2">Create new quiz</a>
+                <a href="viewAllQuizzes.jsp" class="btn border-dark text-muted mt-3 me-2">View my quiz</a>
+                <a href="teacherViewSubmission.jsp" class="btn border-dark text-muted mt-3">View Submissions</a>
+
             </div>
 
 

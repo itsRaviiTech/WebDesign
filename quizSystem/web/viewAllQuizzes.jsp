@@ -46,18 +46,19 @@
     <body class="bg-light">
         <jsp:include page="header.jsp" />
         <jsp:useBean id="user" class="beans.User" scope="session" />
-        <%
-            int userID = user.getUserId();
+        <div class="container">
+            <%
+                int userID = user.getUserId();
 
-            QuizDAO quizdDAO = new QuizDAO();
-            List<Quiz> quizList = new ArrayList<>();
+                QuizDAO quizdDAO = new QuizDAO();
+                List<Quiz> quizList = new ArrayList<>();
 
-            quizList = quizdDAO.getQuizzesByUserID(userID);
+                quizList = quizdDAO.getQuizzesByUserID(userID);
 
-            int noQuiz = 1;
-            for (Quiz quiz : quizList) {
-        %>
-        <main class="container my-4">
+                int noQuiz = 1;
+                for (Quiz quiz : quizList) {
+            %>
+
             <div class="card shadow-hover rounded">
                 <div class="card-body">
                     <h4 class="card-title text-center mb-3">Quiz <%= noQuiz%></h4>
@@ -88,15 +89,17 @@
                     </div>
                 </div>
             </div>
-            <div class="text-center mt-4">
-                <a href="studentDashboard.jsp" class="btn btn-secondary">Back to Student Dashboard</a>
-            </div>
-        </main>
+            <br>
 
-        <%
-                noQuiz++;
-            }
-        %>
+
+            <%
+                    noQuiz++;
+                }
+            %>
+            <div class="text-center mt-4">
+                <a href="teacherDashboard.jsp" class="btn btn-secondary">Back to Dashboard</a>
+            </div>
+        </div>
         <jsp:include page="footer.jsp" />
     </body>
 </html>
