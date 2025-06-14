@@ -71,8 +71,8 @@ The system enhances educational efficiency, reduces administrative workload, and
 
 | Role    | Username | Password |
 |---------|----------|----------|
-| Teacher | teacher1 | 1234     |
-| Student | student1 | 1234     |
+| Teacher | teacher1@example.com | 1234     |
+| Student | student1@example.com | 1234     |
 
 ---
 
