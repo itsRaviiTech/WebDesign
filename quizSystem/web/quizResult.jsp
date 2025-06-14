@@ -47,7 +47,7 @@
             </div>
 
             <div class="back-button">
-                <a href="student_dashboard.jsp">← Back to Dashboard</a>
+<!--                <a href="studentDashboard.jsp">← Back to Dashboard</a>-->
             </div>
         </div>
     </body>
