@@ -36,11 +36,6 @@
                     <button type="submit" class="btn btn-primary btn-lg">Submit Quiz</button>
                 </div>
             </form>
-        </div>
-             <%
-            String jsonQuestions = new com.google.gson.Gson().toJson(questions);
-        %>
-        <pre><%= jsonQuestions%></pre>
         <script>
         const quizData = <%= new com.google.gson.Gson().toJson(questions)%>;
         </script>
