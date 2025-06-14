@@ -17,14 +17,31 @@
                 box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.25);
                 transition: box-shadow 0.3s ease;
             }
+
+            body {
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh; /* full height */
+            }
+
+            main {
+                flex: 1; /* grow to take available space */
+            }
+
+            /* Optional: just for clarity */
+            footer {
+                background-color: #f8f9fa;
+                padding: 1rem;
+                text-align: center;
+            }
         </style>
     </head>
 
     <body style="margin: 0; padding: 0;">
-            <jsp:include page="header.jsp" />
+        <jsp:include page="header.jsp" />
         <jsp:useBean id="user" class="beans.User" scope="session" />
-        
-        <div class="container d-flex align-items-center justify-content-center flex-column ">
+
+        <main class="container d-flex align-items-center justify-content-center flex-column ">
             <div class="text-center mt-5 mb-5">
                 <h1>Welcome, Dr. <jsp:getProperty name="user" property="name" /> </h1>
 
@@ -42,36 +59,38 @@
                 <a href="viewAllQuizzes.jsp" class="btn border-dark text-muted mt-3">View my quiz</a>
             </div>
 
-            <div class="container mt-5">
-                <div class="d-flex justify-content-between text-center flex-wrap">
-                    <div class="card rounded shadow-hover bd-light p-3 mx-2 flex-fill" style="max-width: 30%;">
-                        <p><strong> Quiz 1 </strong></p>
-                        <p>Description</p>
-                        <div class="d-flex justify-content-between">
-                            <a class="btn" href="editQuiz.java">Edit</a>
-                            <a class="btn text-danger" href="assignQuiz.jsp">Hidden</a>
-                        </div>
-                    </div>
-                    <div class="card rounded shadow-hover bd-light p-3 mx-2 flex-fill" style="max-width: 30%;">
-                        <p>Quiz 2</p>
-                        <p>Description</p>
-                        <div class="d-flex justify-content-between">
-                            <a class="btn " href="editQuiz.java">Edit</a>
-                            <a class="btn text-danger" href="assignQuiz.jsp">Hidden</a>
-                        </div>
-                    </div>
-                    <div class="card raunded shadow-hover bd-light p-3 mx-2 flex-fill" style="max-width: 30%;">
-                        <p>Quiz 3</p>
-                        <p>Description</p>
-                        <div class="d-flex justify-content-between">
-                            <a class="btn" href="editquiz.java">Edit</a>
-                            <a class="btn text-danger" href="assignQuiz.jsp">Hidden</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-                <jsp:include page="footer.jsp" />
+
+            <!-- NOT USING ANYMORE -->
+            <!--            <div class="container mt-5">
+                            <div class="d-flex justify-content-between text-center flex-wrap">
+                                <div class="card rounded shadow-hover bd-light p-3 mx-2 flex-fill" style="max-width: 30%;">
+                                    <p><strong> Quiz 1 </strong></p>
+                                    <p>Description</p>
+                                    <div class="d-flex justify-content-between">
+                                        <a class="btn" href="editQuiz.java">Edit</a>
+                                        <a class="btn text-danger" href="assignQuiz.jsp">Hidden</a>
+                                    </div>
+                                </div>
+                                <div class="card rounded shadow-hover bd-light p-3 mx-2 flex-fill" style="max-width: 30%;">
+                                    <p>Quiz 2</p>
+                                    <p>Description</p>
+                                    <div class="d-flex justify-content-between">
+                                        <a class="btn " href="editQuiz.java">Edit</a>
+                                        <a class="btn text-danger" href="assignQuiz.jsp">Hidden</a>
+                                    </div>
+                                </div>
+                                <div class="card raunded shadow-hover bd-light p-3 mx-2 flex-fill" style="max-width: 30%;">
+                                    <p>Quiz 3</p>
+                                    <p>Description</p>
+                                    <div class="d-flex justify-content-between">
+                                        <a class="btn" href="editquiz.java">Edit</a>
+                                        <a class="btn text-danger" href="assignQuiz.jsp">Hidden</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>-->
+        </main>
+        <jsp:include page="footer.jsp" />
     </body>
 
 </html>

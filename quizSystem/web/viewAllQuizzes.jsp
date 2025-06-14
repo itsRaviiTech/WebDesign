@@ -24,6 +24,23 @@
                 transform: translateY(-4px);
                 box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.35);
             }
+
+            body {
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh; /* full height */
+            }
+
+            main {
+                flex: 1; /* grow to take available space */
+            }
+
+            /* Optional: just for clarity */
+            footer {
+                background-color: #f8f9fa;
+                padding: 1rem;
+                text-align: center;
+            }
         </style>
     </head>  
     <body class="bg-light">
@@ -40,7 +57,7 @@
             int noQuiz = 1;
             for (Quiz quiz : quizList) {
         %>
-        <div class="container my-4">
+        <main class="container my-4">
             <div class="card shadow-hover rounded">
                 <div class="card-body">
                     <h4 class="card-title text-center mb-3">Quiz <%= noQuiz%></h4>
@@ -74,7 +91,7 @@
             <div class="text-center mt-4">
                 <a href="studentDashboard.jsp" class="btn btn-secondary">Back to Student Dashboard</a>
             </div>
-        </div>
+        </main>
 
         <%
                 noQuiz++;
