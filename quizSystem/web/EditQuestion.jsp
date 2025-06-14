@@ -63,7 +63,7 @@
             const existingQuestions = <%= new com.google.gson.Gson().toJson(questions)%>;
             window.isEditMode = true;
         </script>
-        <script src="addQuestions.js"></script>
+        <script src="teacherSide.js"></script>
         
          <jsp:include page="footer.jsp" />
     </body>
