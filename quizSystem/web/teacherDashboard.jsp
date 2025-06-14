@@ -20,7 +20,7 @@
         </style>
     </head>
 
-    <body>
+    <body style="margin: 0; padding: 0;">
             <jsp:include page="header.jsp" />
         <jsp:useBean id="user" class="beans.User" scope="session" />
         

@@ -24,6 +24,8 @@ body {
 
 .bg-light {
     background-color: #fdf6e3; /* Light Beige */
+    margin: 0;
+    padding: 0;
 }
 
 /* Header Styling */
@@ -189,7 +191,8 @@ h2 {
 /* HEADER */
 .header-darkish {
     background-color: #b9a185; /* Beige (same as footer) */
-    padding: 0.8rem 0;
+    padding: 0.5rem 1rem;
+    margin: 0;
     text-align: center;
     /*border-bottom: 1px solid #ccc;*/
 }
@@ -456,10 +459,11 @@ input[type="submit"]:hover, button:hover {
             padding: 8px 16px;
         }
     }
-
-    .hover-shadow:hover {
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-        transition: box-shadow 0.3s ease-in-out;
-        transform: translateY(-2px);
-    }
 }
+.hover-shadow:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    transition: box-shadow 0.3s ease-in-out;
+    transform: translateY(-2px);
+}
+
+

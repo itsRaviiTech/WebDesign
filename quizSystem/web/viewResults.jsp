@@ -8,43 +8,65 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <html>
-<head>
-    <title>Your Quiz Results</title>
-    <link rel="stylesheet" type="text/css" href="styles.css">
-</head>
-<body>
+    <head>
+        <title>Your Quiz Results</title>
+        <link rel="stylesheet" type="text/css" href="styles.css">
+
+        <style>
+            body {
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh; /* full height */
+            }
+
+            main {
+                flex: 1; /* grow to take available space */
+            }
+
+            /* Optional: just for clarity */
+            footer {
+                background-color: #f8f9fa;
+                padding: 1rem;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body style="margin: 0; padding: 0;">
         <jsp:include page="header.jsp" />
+        <main class="container">
+            <h2>Your Quiz Results</h2>
 
-    <h2>Your Quiz Results</h2>
+            <c:if test="${not empty results}">
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th>Quiz Title</th>
+                            <th>Score</th>
+                            <th>Submitted At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach var="result" items="${results}">
+                            <tr>
+                                <td>${result.quiz.title}</td> <!-- Assuming result contains quiz object -->
+                                <td>${result.score}</td>
+                                <td>${result.submittedAt}</td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
 
-    <c:if test="${not empty results}">
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>Quiz Title</th>
-                    <th>Score</th>
-                    <th>Submitted At</th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:forEach var="result" items="${results}">
-                    <tr>
-                        <td>${result.quiz.title}</td> <!-- Assuming result contains quiz object -->
-                        <td>${result.score}</td>
-                        <td>${result.submittedAt}</td>
-                    </tr>
-                </c:forEach>
-            </tbody>
-        </table>
-    </c:if>
+            </c:if>
 
-    <c:if test="${empty results}">
-        <p>No results found for you.</p>
-    </c:if>
+            <c:if test="${empty results}">
+                <p>No results found for you.</p>
+            </c:if>
 
-    <br/>
-    <a href="studentDashboard.jsp">Back to Student Dashboard</a>  <!-- Optional, if needed -->
-    <jsp:include page="footer.jsp" />
-</body>
+            <br>
+            <a href="studentDashboard.jsp">Back to Student Dashboard</a>
+        </main>
+        <br/>
+        <jsp:include page="footer.jsp" />
+    </body>
 </html>
 

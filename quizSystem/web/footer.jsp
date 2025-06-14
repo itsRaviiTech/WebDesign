@@ -1,9 +1,3 @@
-<%-- 
-    Document   : footer
-    Created on : 12 Jun 2025, 9:00:51 pm
-    Author     : User
---%>
-
 <%@ page contentType="text/html;charset=UTF-8" %>
 <link href="styles.css" rel="stylesheet">
 

@@ -36,7 +36,7 @@
             List<Quiz> quizList = new ArrayList<>();
 
             quizList = quizdDAO.getQuizzesByUserID(userID);
-            
+
             int noQuiz = 1;
             for (Quiz quiz : quizList) {
         %>
@@ -71,10 +71,14 @@
                     </div>
                 </div>
             </div>
+            <div class="text-center mt-4">
+                <a href="studentDashboard.jsp" class="btn btn-secondary">Back to Student Dashboard</a>
+            </div>
         </div>
-        <% 
-            noQuiz++;
-           }
+
+        <%
+                noQuiz++;
+            }
         %>
         <jsp:include page="footer.jsp" />
     </body>
