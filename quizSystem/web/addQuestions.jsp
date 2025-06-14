@@ -18,6 +18,7 @@
 
     <body>
         <jsp:include page="header.jsp" />
+        
         <div class="container mt-4">
             <h2>Add Multiple Choice Quiz</h2>
             <form  action="SubmitQuizServlet" method="post" id="quizForm">

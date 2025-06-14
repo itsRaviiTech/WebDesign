@@ -40,6 +40,7 @@
         const quizData = <%= new com.google.gson.Gson().toJson(questions)%>;
         </script>
         <script src="studentSide.js"></script>
+        
             <jsp:include page="footer.jsp" />
 
     </body>
