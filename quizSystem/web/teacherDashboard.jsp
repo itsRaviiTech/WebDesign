@@ -46,16 +46,14 @@
                 <h1>Welcome, Dr. <jsp:getProperty name="user" property="name" /> </h1>
 
                 <p class="mx-auto mt-3 w-75 p-3 rounded">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti natus
-                    aliquid itaque
-                    nam
-                    eius modi,
-                    exercitationem tempore similique, est deserunt neque voluptatibus. Repellendus modi doloremque rerum
-                    neque
-                    laudantium, dignissimos aut.
+                    A heartfelt thank you to our dedicated lecturer, Dr. 
+                    Your unwavering commitment, passion for teaching, and 
+                    guidance mean the world to us. We truly appreciate your 
+                    efforts in shaping the minds of our students. 
+                    Sending you our deepest gratitude and warmest wishes!
                 </p>
 
-                <a href="createQuiz.jsp" class="btn bg-dark text-white rounded-sm mt-3 me-2">Create new quiz</a>
+                <a href="createQuiz.jsp" class="btn border-dark text-muted mt-3 me-2">Create new quiz</a>
                 <a href="viewAllQuizzes.jsp" class="btn border-dark text-muted mt-3 me-2">View my quiz</a>
                 <a href="teacherViewSubmission.jsp" class="btn border-dark text-muted mt-3">View Submissions</a>
 

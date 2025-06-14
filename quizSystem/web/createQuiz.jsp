@@ -44,8 +44,8 @@
         <input type="text" name="title" id="title" class="form-control" required placeholder="Quiz title">
 
         <label class="form-label mt-3" for="description">Description</label>
-        <textarea name="description" id="description" class="form-control" rows="2"
-                  style="resize: vertical; overflow: auto;"></textarea>
+        <input type="text" name="description" id="description" class="form-control" required placeholder="Short description">
+
 
         <label class="form-label mt-3" for="is_published">Published Status</label>
         <select name="is_published" id="is_published" class="form-select" required>
@@ -54,9 +54,11 @@
         </select>
 
         <div class="mt-4">
-            <input type="submit" class="btn btn-green" value="Create Quiz">
-            <input type="reset" class="btn btn-red ms-3" value="Clear">
-            <a href="teacherDashboard.jsp" class="btn btn-secondary ms-3">Back to Dashboard</a>
+            <input type="submit" class="btn btn-green w-100" value="Create Quiz">
+            <input type="reset" class="btn ms-3" value="Clear">
+<a href="teacherDashboard.jsp" class="btn ms-3">Back to Dashboard</a>
+
+
         </div>
     </form>
 
