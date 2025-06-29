@@ -130,50 +130,100 @@ public class UpdateQuizServlet extends HttpServlet {
         quiz.setTitle(title);
         quiz.setDescription(description);
         quiz.setIsPublished(isPublished);
-        
+
         //calling DOA to update to Database
         quizDAO.UpdateQuiz(quiz);
 
         List<Question> questionList = new ArrayList<>();
 
         for (int i = 0; i < questionCount; i++) {
+            String questionType = request.getParameter("questionType" + i);
+
             String questionIdStr = request.getParameter("questionId" + i);
             int questionId = (questionIdStr != null && !questionIdStr.isEmpty()) ? Integer.parseInt(questionIdStr) : -1;
 
-            String questionText = request.getParameter("questionText" + i);
-            int points = Integer.parseInt(request.getParameter("points" + i));
+           String normalizedType = questionType.trim().replaceAll("[\\s/]+", "").toLowerCase();
 
-            List<Option> optionList = new ArrayList<>();
+            switch (normalizedType) {
+                case "multiplechoice": {
+                    System.out.println("Question Type :" + questionType);
 
-            for (int j = 1; j <= 4; j++) {
-                String optionIdStr = request.getParameter("optionId_" + i + "_" + j);
-                int optionId = (optionIdStr != null && !optionIdStr.isEmpty()) ? Integer.parseInt(optionIdStr) : -1;
+                    String questionText = request.getParameter("questionText" + i);
+                    int points = Integer.parseInt(request.getParameter("points" + i));
 
-                String optionText = request.getParameter("optionText_" + i + "_" + j);
-                boolean isCorrect = request.getParameter("isCorrect_" + i + "_" + j) != null;
+                    List<Option> optionList = new ArrayList<>();
+                    for (int j = 1; j <= 4; j++) {
+                        String optionIdStr = request.getParameter("optionId_" + i + "_" + j);
+                        int optionId = (optionIdStr != null && !optionIdStr.isEmpty()) ? Integer.parseInt(optionIdStr) : -1;
 
-                Option option = new Option();
-                option.setOptionID(optionId);
-                option.setOptionText(optionText);
-                option.setIsCorrect(isCorrect);
-               
-                optionList.add(option);
-                
+                        String optionText = request.getParameter("optionText_" + i + "_" + j);
+                        boolean isCorrect = request.getParameter("isCorrect_" + i + "_" + j) != null;
+
+                        Option option = new Option();
+                        option.setOptionID(optionId);
+                        option.setOptionText(optionText);
+                        option.setIsCorrect(isCorrect);
+
+                        optionList.add(option);
+                    }
+
+                    Question question = new Question();
+                    question.setQuestionID(questionId);
+                    question.setQuestionText(questionText);
+                    question.setType("Multiple Choice");
+                    question.setOrderIndex(i + 1);
+                    question.setPoints(points);
+                    question.setQuizid(quizId);
+                    question.setOptions(optionList);
+
+                    questionList.add(question);
+                    break;
+                }
+                case "truefalse": {
+                    System.out.println("Question Type :" + questionType);
+
+                    String questionText = request.getParameter("questionText" + i);
+                    System.out.println("The questionText" + questionText);
+                    int points = Integer.parseInt(request.getParameter("points" + i));
+
+                    List<Option> optionList = new ArrayList<>();
+
+                    for (int j = 1; j <= 2; j++) {
+                        String optionIdStr = request.getParameter("optionId_" + i + "_" + j);
+                        int optionId = (optionIdStr != null && !optionIdStr.isEmpty()) ? Integer.parseInt(optionIdStr) : -1;
+
+                        String label = (j == 1) ? "True" : "False";
+                        boolean isCorrect = "true".equals(request.getParameter("isCorrect_" + i)); // radio: only one is checked
+
+                        if (j == 2) {
+                            isCorrect = !isCorrect; // second option is correct if first isn’t
+                        }
+                        Option option = new Option();
+                        option.setOptionID(optionId);
+                        option.setOptionText(label);
+                        option.setIsCorrect(isCorrect);
+
+                        optionList.add(option);
+                    }
+
+                    Question question = new Question();
+                    question.setQuestionID(questionId);
+                    question.setQuestionText(questionText);
+                    question.setType("True/False");
+                    question.setOrderIndex(i + 1);
+                    question.setPoints(points);
+                    question.setQuizid(quizId);
+                    question.setOptions(optionList);
+
+                    questionList.add(question);
+                    break;
+                }
+
+                default:
+                    System.out.println("Unknown question type: " + normalizedType);
             }
 
-            Question question = new Question();
-            question.setQuestionID(questionId);
-            question.setQuestionText(questionText);
-            question.setType("Multiple Choice");
-            question.setOrderIndex(i + 1);
-            question.setPoints(points);
-            question.setQuizid(quizId);
-            question.setOptions(optionList);
-
-
-            questionList.add(question);
         }
-
         for (Question question : questionList) {
             try {
                 boolean updatedStatus = questionDAO.UpdateQuestion(question);  // Tries to update questions/options
@@ -186,14 +236,14 @@ public class UpdateQuizServlet extends HttpServlet {
                         throw new Exception("Option update failed for option ID: " + option.getOptionID());
                     }
                 }
-            } catch (Exception e) {    
+            } catch (Exception e) {
                 int questionsID = questionDAO.insertQuestion(question);
                 for (Option option : question.getOptions()) {
                     boolean optionInsert = optionsDAO.insertOptions(option, questionsID);
                 }
             }
         }
-        
+
         request.getRequestDispatcher("viewAllQuizzes.jsp").forward(request, response);
     }
 

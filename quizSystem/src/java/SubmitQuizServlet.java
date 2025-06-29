@@ -122,11 +122,6 @@ public class SubmitQuizServlet extends HttpServlet {
             String questionText = request.getParameter("questionText" + i);
             int points = Integer.parseInt(request.getParameter("points" + i));
 
-            System.out.println("\n--- Question " + (i + 1) + " ---");
-            System.out.println("Type: " + questionType);
-            System.out.println("Text: " + questionText);
-            System.out.println("Points: " + points);
-
             List<Option> options = new ArrayList<>();
             Question question = new Question();
             question.setQuizid(quizId);
@@ -156,7 +151,6 @@ public class SubmitQuizServlet extends HttpServlet {
 
                 case "true/false":
                     String correctAnswer = request.getParameter("isCorrect_" + i); // "true" or "false"
-                    System.out.println("Correct Answer: " + correctAnswer);
 
                     Option trueOption = new Option();
                     trueOption.setOptionText("True");

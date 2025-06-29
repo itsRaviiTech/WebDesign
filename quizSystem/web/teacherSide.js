@@ -135,25 +135,35 @@ document.addEventListener("DOMContentLoaded", function () {
             block.id = `quizBlock${index}`;
             block.querySelector("h5").innerText = "Question " + (index + 1);
 
-            block.querySelector('input[type="number"]').name = `points${index}`;
-            block.querySelector('input[type="number"]').id = `points${index}`;
+            const pointsInput = block.querySelector('input[type="number"]');
+            pointsInput.name = `points${index}`;
+            pointsInput.id = `points${index}`;
 
             const pointsLabel = block.querySelector('label[for^="points"]');
-            if (pointsLabel) pointsLabel.setAttribute('for', `points${index}`);
+            if (pointsLabel)
+                pointsLabel.setAttribute('for', `points${index}`);
 
             const questionInput = block.querySelector('input[name^="questionText"]');
             questionInput.name = `questionText${index}`;
             questionInput.id = `questionText${index}`;
 
             const questionLabel = block.querySelector('label[for^="questionText"]');
-            if (questionLabel) questionLabel.setAttribute('for', `questionText${index}`);
+            if (questionLabel)
+                questionLabel.setAttribute('for', `questionText${index}`);
 
             const questionTypeSelect = block.querySelector('.question-type-select');
+            questionTypeSelect.name = `questionType${index}`;
+            questionTypeSelect.id = `questionType${index}`;
+            questionTypeSelect.setAttribute("data-index", index);
+
             const questionType = questionTypeSelect?.value || 'Multiple Choice';
 
             if (questionType === 'True/False') {
-                const trueRadio = block.querySelector(`#trueOption_${index}`);
-                const falseRadio = block.querySelector(`#falseOption_${index}`);
+                const trueRadio = block.querySelector(`input[type="radio"][value="true"]`);
+                const falseRadio = block.querySelector(`input[type="radio"][value="false"]`);
+                const tfLabelTrue = block.querySelector(`label[for^="trueOption_"]`);
+                const tfLabelFalse = block.querySelector(`label[for^="falseOption_"]`);
+
                 if (trueRadio) {
                     trueRadio.name = `isCorrect_${index}`;
                     trueRadio.id = `trueOption_${index}`;
@@ -162,18 +172,37 @@ document.addEventListener("DOMContentLoaded", function () {
                     falseRadio.name = `isCorrect_${index}`;
                     falseRadio.id = `falseOption_${index}`;
                 }
-                const tfLabelTrue = block.querySelector(`label[for="trueOption_${index}"]`);
-                const tfLabelFalse = block.querySelector(`label[for="falseOption_${index}"]`);
-                if (tfLabelTrue) tfLabelTrue.setAttribute('for', `trueOption_${index}`);
-                if (tfLabelFalse) tfLabelFalse.setAttribute('for', `falseOption_${index}`);
+                if (tfLabelTrue)
+                    tfLabelTrue.setAttribute('for', `trueOption_${index}`);
+                if (tfLabelFalse)
+                    tfLabelFalse.setAttribute('for', `falseOption_${index}`);
+
+                // Also update hidden optionId fields if exist
+                const optionId1 = block.querySelector(`input[name^="optionId_"][value="-1"]:nth-of-type(1)`);
+                const optionId2 = block.querySelector(`input[name^="optionId_"][value="-1"]:nth-of-type(2)`);
+                if (optionId1)
+                    optionId1.name = `optionId_${index}_1`;
+                if (optionId2)
+                    optionId2.name = `optionId_${index}_2`;
             } else {
                 for (let i = 0; i < 4; i++) {
                     const checkbox = block.querySelector(`input[name="isCorrect_${index}_${i + 1}"]`);
                     const textInput = block.querySelector(`input[name="optionText_${index}_${i + 1}"]`);
-                    if (checkbox) checkbox.name = `isCorrect_${index}_${i + 1}`;
-                    if (textInput) textInput.name = `optionText_${index}_${i + 1}`;
+                    const hiddenInput = block.querySelector(`input[name="optionId_${index}_${i + 1}"]`);
+
+                    if (checkbox)
+                        checkbox.name = `isCorrect_${index}_${i + 1}`;
+                    if (textInput)
+                        textInput.name = `optionText_${index}_${i + 1}`;
+                    if (hiddenInput)
+                        hiddenInput.name = `optionId_${index}_${i + 1}`;
                 }
             }
+
+            // Update hidden questionId
+            const qidInput = block.querySelector(`input[name^="questionId"]`);
+            if (qidInput)
+                qidInput.name = `questionId${index}`;
         });
 
         questionCount = blocks.length;
@@ -184,18 +213,19 @@ document.addEventListener("DOMContentLoaded", function () {
         const block = button.closest('.quiz-block');
 
         if (window.isEditMode && questionId) {
-            if (!confirm("Are you sure you want to delete this question?")) return;
+            if (!confirm("Are you sure you want to delete this question?"))
+                return;
             fetch('DeleteQuestionServlet?questionId=' + questionId)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        block.remove();
-                        updateAllQuestionIndexes();
-                    } else {
-                        alert("Failed to delete question.");
-                    }
-                })
-                .catch(() => alert("Error deleting question."));
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            block.remove();
+                            updateAllQuestionIndexes();
+                        } else {
+                            alert("Failed to delete question.");
+                        }
+                    })
+                    .catch(() => alert("Error deleting question."));
         } else {
             block.remove();
             updateAllQuestionIndexes();
@@ -208,7 +238,7 @@ document.addEventListener("DOMContentLoaded", function () {
         questionCount = currentCount + 1;
         questionCountInput.value = questionCount;
 
-        document.getElementById(`quizBlock${currentCount}`)?.scrollIntoView({ behavior: 'smooth' });
+        document.getElementById(`quizBlock${currentCount}`)?.scrollIntoView({behavior: 'smooth'});
     });
 
     if (typeof existingQuestions !== 'undefined' && Array.isArray(existingQuestions) && existingQuestions.length > 0) {
