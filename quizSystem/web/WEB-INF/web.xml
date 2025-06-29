@@ -24,6 +24,14 @@
         <servlet-name>LogoutServlet</servlet-name>
         <servlet-class>beans.LogoutServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ReviewAnswersServlet</servlet-name>
+        <servlet-class>ReviewAnswersServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>TeacherReportServlet</servlet-name>
+        <servlet-class>dao.TeacherReportServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>SubmitQuizServlet</servlet-name>
         <url-pattern>/SubmitQuizServlet</url-pattern>
@@ -47,6 +55,14 @@
     <servlet-mapping>
         <servlet-name>LogoutServlet</servlet-name>
         <url-pattern>/LogoutServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReviewAnswersServlet</servlet-name>
+        <url-pattern>/ReviewAnswersServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>TeacherReportServlet</servlet-name>
+        <url-pattern>/TeacherReportServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

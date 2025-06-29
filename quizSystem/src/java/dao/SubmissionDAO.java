@@ -110,6 +110,74 @@ public class SubmissionDAO {
         }
         return results;
     }
+
+    public List<Submission> getSubmissionsByStudent(int studentId) {
+        List<Submission> submissions = new ArrayList<>();
+
+        try {
+            String sql = "SELECT s.submission_id, s.quiz_id, s.score, s.submitted_at, "
+                    + "q.title AS quiz_title "
+                    + "FROM submissions s "
+                    + "JOIN quizzes q ON s.quiz_id = q.quiz_id "
+                    + "WHERE s.user_id = ?";
+
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, studentId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Submission sub = new Submission();
+                sub.setSubmissionId(rs.getInt("submission_id"));
+                sub.setQuizId(rs.getInt("quiz_id"));
+                sub.setScore(rs.getFloat("score"));
+                sub.setSubmittedAt(rs.getString("submitted_at")); // Your bean uses String
+                sub.setQuizTitle(rs.getString("quiz_title"));
+
+                submissions.add(sub);
+            }
+
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return submissions;
+    }
+
+    public Submission getSubmissionById(int submissionId) {
+        Submission sub = null;
+
+        try {
+            String sql = "SELECT s.*, q.title AS quiz_title, u.name AS student_name "
+                    + "FROM submissions s "
+                    + "JOIN quizzes q ON s.quiz_id = q.quiz_id "
+                    + "JOIN users u ON s.user_id = u.user_id "
+                    + "WHERE s.submission_id = ?";
+
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, submissionId);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                sub = new Submission();
+                sub.setSubmissionId(rs.getInt("submission_id"));
+                sub.setUserId(rs.getInt("user_id"));
+                sub.setQuizId(rs.getInt("quiz_id"));
+                sub.setScore(rs.getFloat("score"));
+                sub.setSubmittedAt(rs.getString("submitted_at"));
+                sub.setQuizTitle(rs.getString("quiz_title"));
+                sub.setStudentName(rs.getString("student_name"));
+            }
+
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return sub;
+    }
+
     
      public boolean checkIfStudentHasSubmitted(int userId, int quizId) {
         String sql = "SELECT COUNT(*) FROM submissions WHERE user_id = ? AND quiz_id = ?";
