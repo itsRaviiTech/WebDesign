@@ -16,6 +16,7 @@
         <title>JSP Page</title>
         <link rel="stylesheet" type="text/css" href="styles.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+        
     </head>
     <body>
         <jsp:include page="header.jsp" />
@@ -26,7 +27,7 @@
 
         <div class="container mt-5">
             <h2>Edit Quiz</h2>
-            <form action="UpdateQuizServlet" method="post">
+            <form class=" w-75" action="UpdateQuizServlet" method="post">
                 <input type="hidden" name="quizId" value="<%= quiz.getQuizId()%>">
                 <input type="hidden" id="questionCount" name="questionCount" value="<%= questions.size()%>">
 
@@ -36,8 +37,8 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Description:</label>
-                    <textarea class="form-control" name="description" required><%= quiz.getDescription()%></textarea>
+                    <label class="form-label ">Description:</label>
+                    <textarea class="form-control w-100" name="description" required><%= quiz.getDescription()%></textarea>
                 </div>
 
                 <div class="mb-3">
@@ -49,7 +50,7 @@
                     </select>
                 </div>
 
-                <div id="quizContainer"></div>
+                <div id="quizContainer" class="container-fluid d-flex flex-column align-items-center"></div>
 
                 <div class="text-center mt-4">
                     <button type="button" id="addQuizBtn" class="btn btn-success btn-lg">+ Add Question</button>
@@ -61,6 +62,7 @@
 
         <script>
             const existingQuestions = <%= new com.google.gson.Gson().toJson(questions)%>;
+            window.isEditMode = true;
         </script>
 
         <script>

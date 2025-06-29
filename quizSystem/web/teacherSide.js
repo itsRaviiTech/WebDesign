@@ -16,7 +16,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function createQuizBlock(index, questionData = null) {
         const div = document.createElement('div');
-        div.className = 'quiz-block border p-3 mb-3 rounded shadow-sm position-relative';
+        div.className = 'quiz-block border p-4 mb-4 rounded shadow-sm position-relative w-100 col-12 col-md-10';
+        div.style.maxWidth = '700px'; // Adjust width as needed
+        div.style.width = '100%';
         div.id = `quizBlock${index}`;
 
         const questionType = questionData?.type || 'Multiple Choice';
@@ -42,12 +44,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 const optionText = questionData?.options?.[i]?.optionText || '';
                 const isCorrect = questionData?.options?.[i]?.isCorrect ? 'checked' : '';
                 optionsHTML += `
-                    <div class="input-group mt-2">
-                        <input type="hidden" name="optionId_${index}_${i + 1}" value="${optionId}">
-                        <div class="input-group-text">
-                            <input type="checkbox" name="isCorrect_${index}_${i + 1}" value="true" ${isCorrect}>
+                    <div class="d-flex align-items-center gap-2 mt-2">
+                        <input type="hidden" name="optionId_${index}_${i + 1}" value="${questionData?.questionID ?? -1}">
+                        <div class="form-check m-0">
+                            <input class="form-check-input" type="checkbox" name="isCorrect_${index}_${i + 1}" value="true" ${isCorrect}>
                         </div>
-                        <input type="text" class="form-control" name="optionText_${index}_${i + 1}" placeholder="Option ${i + 1}" value="${optionText}" required>
+                        <input type="text" class="form-control flex-grow-1" name="optionText_${index}_${i + 1}" placeholder="Option ${i + 1}" value="${optionText}" required>
                     </div>
                 `;
             }
@@ -212,20 +214,29 @@ document.addEventListener("DOMContentLoaded", function () {
     window.deleteQuestion = function (button, questionId) {
         const block = button.closest('.quiz-block');
 
-        if (window.isEditMode && questionId) {
+        if (window.isEditMode && questionId && questionId !== -1) {
             if (!confirm("Are you sure you want to delete this question?"))
                 return;
-            fetch('DeleteQuestionServlet?questionId=' + questionId)
+
+            // Disable button to prevent multiple clicks
+            button.disabled = true;
+
+            fetch('DeleteQuestionServlet?questionId=' + encodeURIComponent(questionId))
                     .then(response => response.json())
                     .then(data => {
-                        if (data.success) {
+                        if (data && data.success) {
                             block.remove();
                             updateAllQuestionIndexes();
                         } else {
-                            alert("Failed to delete question.");
+                            alert("Failed to delete question from database.");
+                            button.disabled = false;
                         }
                     })
-                    .catch(() => alert("Error deleting question."));
+                    .catch(() => {
+                        alert("Error deleting question.");
+                        button.disabled = false;
+                    });
+
         } else {
             block.remove();
             updateAllQuestionIndexes();

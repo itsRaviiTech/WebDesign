@@ -61,7 +61,8 @@ public class DeleteQuestionServlet extends HttpServlet {
         
         try {
             int questionId = Integer.parseInt(request.getParameter("questionId"));
-
+            System.out.println("Received request to delete questionId: " + questionId);
+            
             QuestionDAO questioDao = new QuestionDAO();
             boolean status = questioDao.deleteQuestionbyId(questionId);
             out.print("{\"success\": " + status + "}");

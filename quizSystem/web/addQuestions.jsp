@@ -24,7 +24,7 @@
             <form  action="SubmitQuizServlet" method="post" id="quizForm">
                 <input type="hidden" id="questionCount" name="questionCount" value="0" />
          
-                <div id="quizContainer"></div>
+                <div id="quizContainer" class="container-fluid d-flex flex-column align-items-center"></div>
 
                 <div class="text-center mt-4">
                     <button type="button" id="addQuizBtn" class="btn btn-success btn-lg">+ Add Question</button>

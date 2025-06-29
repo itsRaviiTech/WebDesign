@@ -142,7 +142,7 @@ public class UpdateQuizServlet extends HttpServlet {
             String questionIdStr = request.getParameter("questionId" + i);
             int questionId = (questionIdStr != null && !questionIdStr.isEmpty()) ? Integer.parseInt(questionIdStr) : -1;
 
-           String normalizedType = questionType.trim().replaceAll("[\\s/]+", "").toLowerCase();
+            String normalizedType = questionType.trim().replaceAll("[\\s/]+", "").toLowerCase();
 
             switch (normalizedType) {
                 case "multiplechoice": {
@@ -225,21 +225,26 @@ public class UpdateQuizServlet extends HttpServlet {
 
         }
         for (Question question : questionList) {
-            try {
-                boolean updatedStatus = questionDAO.UpdateQuestion(question);  // Tries to update questions/options
-                if (!updatedStatus) {
-                    throw new Exception("Question update failed for question ID: " + question.getQuestionID());
-                }
+            if (question.getQuestionID() == -1) {
+                // INSERT new question
+                int newQuestionId = questionDAO.insertQuestion(question);
                 for (Option option : question.getOptions()) {
-                    boolean optionUpdated = optionsDAO.UpdateOptionsByOptionID(option);
-                    if (!optionUpdated) {
-                        throw new Exception("Option update failed for option ID: " + option.getOptionID());
+                    optionsDAO.insertOptions(option, newQuestionId);
+                }
+            } else {
+                // UPDATE existing question
+                boolean updated = questionDAO.UpdateQuestion(question);
+                if (updated) {
+                    for (Option option : question.getOptions()) {
+                        boolean optionUpdated = optionsDAO.UpdateOptionsByOptionID(option);
+                        if (!optionUpdated) {
+                            // fallback: insert if update fails
+                            optionsDAO.insertOptions(option, question.getQuestionID());
+                        }
                     }
-                }
-            } catch (Exception e) {
-                int questionsID = questionDAO.insertQuestion(question);
-                for (Option option : question.getOptions()) {
-                    boolean optionInsert = optionsDAO.insertOptions(option, questionsID);
+                } else {
+                    // fallback if question ID exists but update fails
+                    System.out.println("Failed to update question ID: " + question.getQuestionID());
                 }
             }
         }
