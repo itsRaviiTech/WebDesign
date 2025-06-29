@@ -6,7 +6,7 @@ package beans;
 
 /**
  *
- * @author User
+ * @author kirtie
  */
 import dao.QuizDAO;
 import dao.QuestionDAO;
@@ -90,15 +90,33 @@ public class AttemptQuizServlet extends HttpServlet {
 
         StudentDAO studentDao = new StudentDAO();
         int submissionID = studentDao.insertSubmission(submission);
+
         for (Question q : question) {
             Answer answer = new Answer();
             String paramName = "question_" + q.getQuestionID(); // Use q.getQuestionID() not q.getQuestionId() if your method is like this
-            int selectedOptionId = Integer.parseInt(request.getParameter(paramName));
+            String selectedOption = request.getParameter(paramName);
+
+            // Handle True/False questions
+            if (selectedOption != null) {
+                if (selectedOption.equals("true") || selectedOption.equals("false")) {
+                    // For True/False, set selected option as 1 for true, 0 for false
+                    answer.setSelectedOptionId(selectedOption.equals("true") ? 1 : 0);
+                } else {
+                    // Handle Multiple Choice (other questions)
+                    try {
+                        int selectedOptionId = Integer.parseInt(selectedOption);
+                        answer.setSelectedOptionId(selectedOptionId);
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace(); // Handle the exception (you could also log or handle more gracefully)
+                    }
+                }
+            }
+
             answer.setSubmissionId(submissionID);
             answer.setQuestionId(q.getQuestionID());
-            answer.setSelectedOptionId(selectedOptionId);
             studentDao.insertAnswers(answer);
         }
+
         session.setAttribute("submissionId", submissionID);
         response.sendRedirect("GradeSubmissionServlet?submissionId=" + submissionID);
     }

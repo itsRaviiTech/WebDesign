@@ -41,7 +41,8 @@
         </script>
         <script src="studentSide.js"></script>
         
-            <jsp:include page="footer.jsp" />
+            
 
     </body>
+    <jsp:include page="footer.jsp" />
 </html>
