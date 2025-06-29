@@ -14,6 +14,19 @@ public class Option {
     private int questionID;
     private String optionText;
     private boolean isCorrect;
+    private boolean isSelected;
+
+    public void setIsSelected(boolean isSelected) {
+        this.isSelected = isSelected;
+    }
+
+    public boolean isIsCorrect() {
+        return isCorrect;
+    }
+
+    public boolean isIsSelected() {
+        return isSelected;
+    }
 
     public void setOptionID(int optionID) {
         this.optionID = optionID;

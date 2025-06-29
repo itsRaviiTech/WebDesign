@@ -40,6 +40,8 @@
 
             <!-- Link to view available quizzes -->
             <a href="viewAvailableQuizzes.jsp" class="box-link">View Available Quizzes</a>
+            <a href="studentViewSubmission.jsp" class="box-link">View Submission</a>
+
 
         </main>
         <jsp:include page="footer.jsp" />
