@@ -61,10 +61,14 @@
 
         <script>
             const existingQuestions = <%= new com.google.gson.Gson().toJson(questions)%>;
-            window.isEditMode = true;
+        </script>
+
+        <script>
+            console.log("Existing Questions JSON:");
+            console.log(JSON.stringify(existingQuestions, null, 2));
         </script>
         <script src="teacherSide.js"></script>
-        
-         <jsp:include page="footer.jsp" />
+
+        <jsp:include page="footer.jsp" />
     </body>
 </html>
