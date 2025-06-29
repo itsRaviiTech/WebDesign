@@ -13,9 +13,12 @@ import beans.DBConnection;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AnswerDAO {
+
     private Connection connection;
 
     public AnswerDAO() {
@@ -58,4 +61,27 @@ public class AnswerDAO {
 
         return answers;
     }
+
+    public Map<Integer, Integer> getSelectedOptionsBySubmission(int submissionId) {
+        Map<Integer, Integer> selected = new HashMap<>();
+
+        try {
+            String sql = "SELECT question_id, selected_option_id FROM answer WHERE submission_id = ?";
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, submissionId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                selected.put(rs.getInt("question_id"), rs.getInt("selected_option_id"));
+            }
+
+            // DO NOT close the connection here if shared
+            // connection.close(); 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return selected;
+    }
+
 }
