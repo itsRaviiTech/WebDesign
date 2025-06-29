@@ -41,6 +41,10 @@
             <!-- Link to view available quizzes -->
             <a href="viewAvailableQuizzes.jsp" class="box-link">View Available Quizzes</a>
 
+            <div class="card joke-card">
+                <p>Having a bad day? <a href="joke.jsp" class="joke-link">Click Me!</a></p>
+            </div>
+            
         </main>
         <jsp:include page="footer.jsp" />
     </body>

@@ -15,8 +15,8 @@ body {
     padding: 0;
     color: #333;
     display: flex;
-    justify-content: flex-start;
-    align-items: flex-start;
+    justify-content: center;
+    align-items: center;
     min-height: 100vh;
     flex-direction: column;
     padding-top: 40px;
@@ -458,6 +458,14 @@ input[type="submit"]:hover, button:hover {
             font-size: 14px;
             padding: 8px 16px;
         }
+
+        .joke-card p {
+            font-size: 16px;
+        }
+
+        .joke-options select, .joke-options input[type="submit"] {
+            width: 90%; /* Increase the input width on smaller screens */
+        }
     }
 }
 .hover-shadow:hover {
@@ -482,4 +490,112 @@ input[type="submit"]:hover, button:hover {
 /* Flagged state (red) */
 .flagged {
     color: red;
+}
+
+/* Styling for the joke card */
+
+/* Joke Section (centering and styling) */
+.joke-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 600px; /* Limiting the max width */
+    padding: 20px;
+    margin: 20px auto;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.joke-card {
+    background-color: #f0f8ff; /* Light cyan */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%; /* Full width */
+    max-width: 100%; /* Ensures it takes full space */
+    margin: 20px auto;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Form Styling */
+form {
+    margin-top: 30px;
+    width: 100%;
+    max-width: 500px; /* Limiting width */
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.joke-card:hover {
+    transform: translateY(-5px); /* Slight lift effect */
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2); /* Slightly bigger shadow on hover */
+}
+
+.joke-card p {
+    font-size: 18px;
+    font-weight: 500;
+    color: #493129; /* Dark brown for text color */
+    margin-bottom: 10px;
+}
+
+/* Styling for the joke selection form */
+.joke-options {
+    margin-top: 30px;
+}
+
+.joke-link {
+    font-size: 16px;
+    color: #8b597b; /* Mauve color for the link */
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.joke-link:hover {
+    color: #dfa3a0; /* Light coral color on hover */
+}
+
+/* General settings for the page */
+.page-wrapper {
+    width: 100%;
+    max-width: 600px;  /* Controls width of the joke section */
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    /* Added flexbox to center everything inside */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* Header card styling */
+.app-header-card {
+    text-align: center;
+    background-color: #8b597b; /* Mauve */
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+.app-header-card h1 {
+    color: #fff;
+    font-size: 36px;
+}
+
+.app-header-card .subtitle {
+    color: #fdf6e3;
+    font-size: 18px;
+    font-weight: 500;
 }
