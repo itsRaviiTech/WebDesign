@@ -19,48 +19,117 @@ document.addEventListener("DOMContentLoaded", function () {
         div.className = 'quiz-block border p-3 mb-3 rounded shadow-sm position-relative';
         div.id = `quizBlock${index}`;
 
-        // Build 4 fixed options, use questionData if available
+        const questionType = questionData?.type || 'Multiple Choice'; // 'multiple' or 'truefalse'
+        const isTF = questionType === 'True/False';
+
+        // Generate options section
         let optionsHTML = '';
-        for (let i = 0; i < 4; i++) {
-            const optionId = questionData?.options?.[i]?.optionID ?? -1;
-            const optionText = questionData?.options?.[i]?.optionText || '';
-            const isCorrect = questionData?.options?.[i]?.isCorrect ? 'checked' : '';
-            optionsHTML += `
+
+        if (isTF) {
+            const trueChecked = questionData?.options?.[0]?.isCorrect ? 'checked' : '';
+            const falseChecked = questionData?.options?.[1]?.isCorrect ? 'checked' : '';
+            optionsHTML = `
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="isCorrect_${index}" id="trueOption_${index}" value="true" ${trueChecked} required>
+                <label class="form-check-label" for="trueOption_${index}">True</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="isCorrect_${index}" id="falseOption_${index}" value="false" ${falseChecked}>
+                <label class="form-check-label" for="falseOption_${index}">False</label>
+            </div>
+        `;
+        } else {
+            for (let i = 0; i < 4; i++) {
+                const optionId = questionData?.options?.[i]?.optionID ?? -1;
+                const optionText = questionData?.options?.[i]?.optionText || '';
+                const isCorrect = questionData?.options?.[i]?.isCorrect ? 'checked' : '';
+                optionsHTML += `
                 <div class="input-group mt-2">
                     <input type="hidden" name="optionId_${index}_${i + 1}" value="${optionId}">
                     <div class="input-group-text">
-                        <input type="checkbox" name="isCorrect_${index}_${i + 1}" value="true" aria-label="Checkbox for option ${i + 1}" ${isCorrect}>
+                        <input type="checkbox" name="isCorrect_${index}_${i + 1}" value="true" ${isCorrect}>
                     </div>
                     <input type="text" class="form-control" name="optionText_${index}_${i + 1}" placeholder="Option ${i + 1}" value="${optionText}" required>
                 </div>
             `;
+            }
         }
 
         div.innerHTML = `
-            <div class="d-flex justify-content-between align-items-start mb-2">
-                <h5>Question ${index + 1}</h5>
-                <div class="ms-auto d-flex align-items-center">
-                    <label for="points${index}" class="form-label me-2 mb-0">Points:</label>
-                    <input type="number" class="form-control d-inline-block" style="width: 80px;" id="points${index}" name="points${index}" min="1" value="${questionData?.points || 1}" required>
-                </div>
+        <div class="d-flex justify-content-between align-items-start mb-2">
+            <h5>Question ${index + 1}</h5>
+            <div class="ms-auto d-flex align-items-center">
+                <label for="points${index}" class="form-label me-2 mb-0">Points:</label>
+                <input type="number" class="form-control d-inline-block" style="width: 80px;" id="points${index}" name="points${index}" min="1" value="${questionData?.points || 1}" required>
             </div>
+        </div>
 
-            <button type="button" class="btn btn-sm btn-danger mb-2" onclick="deleteQuestion(this, ${questionData?.questionID !== undefined ? `'${questionData.questionID}'` : 'null'})">Delete Question</button>
+        <button type="button" class="btn btn-sm btn-danger mb-2" onclick="deleteQuestion(this, ${questionData?.questionID !== undefined ? `'${questionData.questionID}'` : 'null'})">Delete Question</button>
 
-            <div class="mb-3">
-                <input type="hidden" name="questionId${index}" value="${questionData?.questionID ?? -1}">
-                <label for="questionText${index}" class="form-label">Question Text:</label>
-                <input type="text" class="form-control" id="questionText${index}" name="questionText${index}" value="${questionData?.questionText || ''}" required>
-            </div>
+        <div class="mb-2">
+            <label for="questionType${index}" class="form-label">Question Type:</label>
+            <select class="form-select question-type-select" name="questionType${index}" id="questionType${index}" data-index="${index}">
+                <option value="Multiple Choice" ${questionType === 'Multiple Choice' ? 'selected' : ''}>Multiple Choice</option>
+                <option value="True/False" ${questionType === 'True/False' ? 'selected' : ''}>True / False</option>
+            </select>
+        </div>
 
-            <div class="multiple-section mb-3">
-                <label>Options (check the correct ones):</label>
-                ${optionsHTML}
-            </div>
-        `;
+        <div class="mb-3">
+            <input type="hidden" name="questionId${index}" value="${questionData?.questionID ?? -1}">
+            <label for="questionText${index}" class="form-label">Question Text:</label>
+            <input type="text" class="form-control" id="questionText${index}" name="questionText${index}" value="${questionData?.questionText || ''}" required>
+        </div>
+
+        <div class="multiple-section mb-3">
+            <label>Options (${questionType === 'Multiple Choice' ? 'check the correct ones' : 'choose the correct one'}):</label>
+            ${optionsHTML}
+        </div>
+    `;
 
         quizContainer.appendChild(div);
     }
+
+    quizContainer.addEventListener('change', function (e) {
+        if (e.target.classList.contains('question-type-select')) {
+            const index = e.target.getAttribute('data-index');
+            const block = document.getElementById(`quizBlock${index}`);
+            const selectedType = e.target.value;
+
+            const optionContainer = block.querySelector('.multiple-section');
+            let optionsHTML = '';
+
+            if (selectedType === 'True/False') {
+                optionsHTML = `
+                <input type="hidden" name="optionId_${index}_1" value="-1">
+                <input type="hidden" name="optionId_${index}_2" value="-1">
+
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="isCorrect_${index}" id="trueOption_${index}" value="true" required>
+                    <label class="form-check-label" for="trueOption_${index}">True</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="isCorrect_${index}" id="falseOption_${index}" value="false">
+                    <label class="form-check-label" for="falseOption_${index}">False</label>
+                </div>
+            `;
+            } else {
+                optionsHTML = [...Array(4)].map((_, i) => `
+                <div class="input-group mt-2">
+                    <input type="hidden" name="optionId_${index}_${i + 1}" value="-1">
+                    <div class="input-group-text">
+                        <input type="checkbox" name="isCorrect_${index}_${i + 1}" value="true">
+                    </div>
+                    <input type="text" class="form-control" name="optionText_${index}_${i + 1}" placeholder="Option ${i + 1}" required>
+                </div>
+            `).join('');
+            }
+
+            optionContainer.innerHTML = `
+            <label>Options (${selectedType === 'Multiple Choice' ? 'check the correct ones' : 'choose the correct one'}):</label>
+            ${optionsHTML}
+        `;
+        }
+    });
 
     function updateAllQuestionIndexes() {
         const blocks = quizContainer.querySelectorAll('.quiz-block');
@@ -74,26 +143,52 @@ document.addEventListener("DOMContentLoaded", function () {
             pointsInput.id = `points${index}`;
 
             const pointsLabel = block.querySelector('label[for^="points"]');
-            if (pointsLabel)
+            if (pointsLabel) {
                 pointsLabel.setAttribute('for', `points${index}`);
+            }
 
             const questionInput = block.querySelector('input[name^="questionText"]');
             questionInput.name = `questionText${index}`;
             questionInput.id = `questionText${index}`;
 
             const questionLabel = block.querySelector('label[for^="questionText"]');
-            if (questionLabel)
+            if (questionLabel) {
                 questionLabel.setAttribute('for', `questionText${index}`);
+            }
 
-            // Update option names for fixed 4 options
-            for (let i = 0; i < 4; i++) {
-                const checkbox = block.querySelector(`input[type="checkbox"][name^="isCorrect_${index}_"]`);
-                const optionCheckbox = block.querySelector(`input[name="isCorrect_${index}_${i + 1}"]`);
-                if (optionCheckbox)
-                    optionCheckbox.name = `isCorrect_${index}_${i + 1}`;
-                const optionTextInput = block.querySelector(`input[name="optionText_${index}_${i + 1}"]`);
-                if (optionTextInput)
-                    optionTextInput.name = `optionText_${index}_${i + 1}`;
+            // Check for question type and update accordingly
+            const questionTypeSelect = block.querySelector('.question-type-select');
+            const questionType = questionTypeSelect?.value || 'multiple';
+
+            if (questionType === 'truefalse') {
+                const trueRadio = block.querySelector(`#trueOption_${index}`);
+                const falseRadio = block.querySelector(`#falseOption_${index}`);
+                const tfLabelTrue = block.querySelector(`label[for="trueOption_${index}"]`);
+                const tfLabelFalse = block.querySelector(`label[for="falseOption_${index}"]`);
+
+                if (trueRadio) {
+                    trueRadio.name = `isCorrect_${index}`;
+                    trueRadio.id = `trueOption_${index}`;
+                }
+                if (falseRadio) {
+                    falseRadio.name = `isCorrect_${index}`;
+                    falseRadio.id = `falseOption_${index}`;
+                }
+                if (tfLabelTrue)
+                    tfLabelTrue.setAttribute('for', `trueOption_${index}`);
+                if (tfLabelFalse)
+                    tfLabelFalse.setAttribute('for', `falseOption_${index}`);
+            } else {
+                for (let i = 0; i < 4; i++) {
+                    const optionCheckbox = block.querySelector(`input[name="isCorrect_${index}_${i + 1}"]`);
+                    if (optionCheckbox) {
+                        optionCheckbox.name = `isCorrect_${index}_${i + 1}`;
+                    }
+                    const optionTextInput = block.querySelector(`input[name="optionText_${index}_${i + 1}"]`);
+                    if (optionTextInput) {
+                        optionTextInput.name = `optionText_${index}_${i + 1}`;
+                    }
+                }
             }
         });
 

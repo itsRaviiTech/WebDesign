@@ -36,7 +36,7 @@
             </form>
         </div>
         
-        <script src="addQuestions.js"></script>
+        <script src="teacherSide.js"></script>
         
             <jsp:include page="footer.jsp" />
 

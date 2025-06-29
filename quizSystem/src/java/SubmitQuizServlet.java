@@ -82,7 +82,7 @@ public class SubmitQuizServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Quiz not found.");
             return;
         }
-        
+
         // Set quiz and questions in request scope for JSP to use
         request.setAttribute("quiz", quiz);
         request.setAttribute("questionList", questionList);
@@ -118,30 +118,54 @@ public class SubmitQuizServlet extends HttpServlet {
         OptionDAO optionsDao = new OptionDAO();
 
         for (int i = 0; i < questionCount; i++) {
-            int questionID = 0;
+            String questionType = request.getParameter("questionType" + i);
             String questionText = request.getParameter("questionText" + i);
             int points = Integer.parseInt(request.getParameter("points" + i));
 
+            System.out.println("\n--- Question " + (i + 1) + " ---");
+            System.out.println("Type: " + questionType);
+            System.out.println("Text: " + questionText);
+            System.out.println("Points: " + points);
+
             List<Option> options = new ArrayList<>();
-
-            for (int j = 1; j <= 4; j++) {
-                String optionText = request.getParameter("optionText_" + i + "_" + j);
-                boolean isCorrect = request.getParameter("isCorrect_" + i + "_" + j) != null;
-
-                Option opt = new Option();
-                opt.setOptionText(optionText);
-                opt.setIsCorrect(isCorrect);
-                options.add(opt);
-            }
-
             Question question = new Question();
             question.setQuizid(quizId);
             question.setQuestionText(questionText);
             question.setPoints(points);
-            question.setOptions(options);
-            question.setType("Multiple Choice");
             question.setOrderIndex(i + 1);
+            question.setType(questionType);
 
+            int questionID = -1;
+
+            if ("Multiple Choice".equalsIgnoreCase(questionType)) {
+                for (int j = 1; j <= 4; j++) {
+                    String optionText = request.getParameter("optionText_" + i + "_" + j);
+                    boolean isCorrect = request.getParameter("isCorrect_" + i + "_" + j) != null;
+
+                    Option opt = new Option();
+                    opt.setOptionText(optionText);
+                    opt.setIsCorrect(isCorrect);
+                    options.add(opt);
+                }
+
+            } else if ("True / False".equalsIgnoreCase(questionType)) {
+                String correctAnswer = request.getParameter("isCorrect_" + i); // "true" or "false"
+
+                // Add "True" option
+                Option trueOption = new Option();
+                trueOption.setOptionText("True");
+                trueOption.setIsCorrect("true".equalsIgnoreCase(correctAnswer));
+                options.add(trueOption);
+
+                // Add "False" option
+                Option falseOption = new Option();
+                falseOption.setOptionText("False");
+                falseOption.setIsCorrect("false".equalsIgnoreCase(correctAnswer));
+                options.add(falseOption);
+            }
+
+            // Save question and options
+            question.setOptions(options);
             questionList.add(question);
 
             questionID = questionDao.insertQuestion(question);
@@ -151,6 +175,7 @@ public class SubmitQuizServlet extends HttpServlet {
                 }
             }
         }
+
         response.sendRedirect("teacherDashboard.jsp");
     }
 
