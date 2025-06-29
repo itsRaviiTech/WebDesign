@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     quizData.forEach((question, index) => {
         const questionBlock = document.createElement("div");
-        questionBlock.className = "quiz-block p-3 border rounded shadow-sm";
+        questionBlock.className = "quiz-block p-3 border rounded shadow-sm mb-4";
 
         const questionHeader = document.createElement("h5");
         questionHeader.textContent = `Q${index + 1}: ${question.questionText}`;
@@ -16,11 +16,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const optionList = document.createElement("div");
 
+        // Detect if it's a True/False question
+        const isTrueFalse = question.options.length === 2 &&
+            question.options.every(opt => {
+                const txt = opt.optionText.trim().toLowerCase();
+                return txt === "true" || txt === "false";
+            });
+
         question.options.forEach((option, optIndex) => {
             const optionDiv = document.createElement("div");
             optionDiv.className = "p-2 rounded mb-2";
 
-            // logic for highlight class
+            // Apply highlight styles
             const isCorrect = option.isCorrect;
             const isSelected = option.isSelected;
 
@@ -32,8 +39,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 optionDiv.classList.add("highlight-missed");
             }
 
+            // Format option label
+            const optionLabel = isTrueFalse
+                ? ""
+                : `<strong>${String.fromCharCode(65 + optIndex)}.</strong> `;
+
             optionDiv.innerHTML = `
-                <strong>${String.fromCharCode(65 + optIndex)}.</strong> ${option.optionText}
+                ${optionLabel}${option.optionText}
                 ${isCorrect ? "<span class='badge bg-success ms-2'>Correct</span>" : ""}
                 ${isSelected ? "<span class='badge bg-primary ms-2'>Your Answer</span>" : ""}
             `;
