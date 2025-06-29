@@ -178,4 +178,21 @@ public class SubmissionDAO {
         return sub;
     }
 
+    
+     public boolean checkIfStudentHasSubmitted(int userId, int quizId) {
+        String sql = "SELECT COUNT(*) FROM submissions WHERE user_id = ? AND quiz_id = ?";
+        
+        try (Connection conn = DBConnection.getConnection(); 
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setInt(2, quizId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) {
+                return true; // Student has already submitted
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false; // Student has not submitted
+    }
 }

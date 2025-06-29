@@ -14,6 +14,7 @@ public class Answer {
     private int questionId;
     private int selectedOptionId;
     private boolean isCorrect;
+    private boolean flag;
 
     // Getters and Setters
     public int getAnswerId() {
@@ -50,4 +51,11 @@ public class Answer {
     public void setCorrect(boolean isCorrect) {
         this.isCorrect = isCorrect;
     }
+    
+    public boolean isFlag() {
+    return flag;
+}
+public void setFlag(boolean flag) {
+    this.flag = flag;
+}
 }
