@@ -465,3 +465,21 @@ input[type="submit"]:hover, button:hover {
     transition: box-shadow 0.3s ease-in-out;
     transform: translateY(-2px);
 }
+
+/* Style the flag emoji (button-like appearance) */
+.flag {
+    cursor: pointer; /* Makes it clickable */
+    font-size: 18px;  /* Small size for the flag emoji */
+    transition: color 0.3s ease; /* Smooth transition for color change */
+    margin-right: 10px; /* Space between flag and question text */
+}
+
+/* Unflagged state (green) */
+.unflagged {
+    color: green;
+}
+
+/* Flagged state (red) */
+.flagged {
+    color: red;
+}
