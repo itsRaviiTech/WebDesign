@@ -18,10 +18,15 @@ public class Quiz {
     private boolean isPublished;
     private int createdBy;
     private LocalDate createdAt;
+    private int noOfAttempt;
     private List<Question> questions;
 
     public void setQuizId(int quizId) {
         this.quizId = quizId;
+    }
+
+    public void setNoOfAttempt(int noOfAttempt) {
+        this.noOfAttempt = noOfAttempt;
     }
 
     public void setTitle(String title) {
@@ -50,6 +55,10 @@ public class Quiz {
 
     public int getQuizId() {
         return quizId;
+    }
+    
+    public int getNoOfAttempt() {
+        return noOfAttempt;
     }
 
     public String getTitle() {

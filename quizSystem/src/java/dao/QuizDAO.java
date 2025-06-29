@@ -49,6 +49,21 @@ public class QuizDAO {
         return id;
     }
 
+    public int insertNoOfAttempt(int id, Quiz quiz) {
+        int status = -1;
+        try {
+            String sql = "INSERT INTO quiz_assignments (quiz_id, allow_multiple_attempts) VALUES (?, ?)";
+            PreparedStatement preparedStatement = con.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+            preparedStatement.setInt(2, quiz.getNoOfAttempt());  // Or use setBoolean based on your DB schema
+
+            status = preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return status;
+    }
+
     public boolean deleteQuizAndRelatedData(int quizId) {
         String deleteAnswersQuery = "DELETE a FROM answer a "
                 + "JOIN submissions s ON a.submission_id = s.submission_id "
@@ -111,7 +126,6 @@ public class QuizDAO {
         return success;
     }
 
-    
     public List<Quiz> getQuizzesByUserID(int userId) {
         List<Quiz> quizzes = new ArrayList<>();
 
@@ -147,32 +161,32 @@ public class QuizDAO {
     }
 
     public List<Quiz> getAllQuizzes() {
-    List<Quiz> quizzes = new ArrayList<>();
-    String sql = "SELECT * FROM quizzes WHERE is_published = 1"; // Only fetch published quizzes
-    
-    try {
-        Statement statement = con.createStatement();
-        ResultSet resultSet = statement.executeQuery(sql);
-        
-        while (resultSet.next()) {
-            Quiz quiz = new Quiz();
-            quiz.setQuizId(resultSet.getInt("quiz_id"));
-            quiz.setTitle(resultSet.getString("title"));
-            quiz.setDescription(resultSet.getString("description"));
-            quizzes.add(quiz);
-        }
+        List<Quiz> quizzes = new ArrayList<>();
+        String sql = "SELECT * FROM quizzes WHERE is_published = 1"; // Only fetch published quizzes
 
-        // Debugging: Print the number of quizzes fetched from the database
-        System.out.println("Number of quizzes fetched from DB: " + quizzes.size());
-    } catch (SQLException e) {
-        e.printStackTrace();
+        try {
+            Statement statement = con.createStatement();
+            ResultSet resultSet = statement.executeQuery(sql);
+
+            while (resultSet.next()) {
+                Quiz quiz = new Quiz();
+                quiz.setQuizId(resultSet.getInt("quiz_id"));
+                quiz.setTitle(resultSet.getString("title"));
+                quiz.setDescription(resultSet.getString("description"));
+                quizzes.add(quiz);
+            }
+
+            // Debugging: Print the number of quizzes fetched from the database
+            System.out.println("Number of quizzes fetched from DB: " + quizzes.size());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return quizzes;
     }
-    return quizzes;
-}
 
     public Quiz getQuizById(int quizId) {
         Quiz quiz = null;
-        String sql = "SELECT * FROM quizzes WHERE quiz_id = ?";
+        String sql = "SELECT * FROM quizzes q JOIN quiz_assignments USING(quiz_id) WHERE quiz_id = ?";
 
         try {
             PreparedStatement preparedStatement = con.prepareStatement(sql);
@@ -185,6 +199,7 @@ public class QuizDAO {
                 quiz.setTitle(resultSet.getString("title"));
                 quiz.setDescription(resultSet.getString("description"));
                 quiz.setIsPublished(resultSet.getBoolean("is_published"));
+                quiz.setNoOfAttempt(resultSet.getInt("allow_multiple_attempts"));
             }
         } catch (SQLException e) {
         }
@@ -213,9 +228,9 @@ public class QuizDAO {
         }
         return id;
     }
-    
 
-    ////// KIRTIE
+
+////// KIRTIE
     
 //    // Method to fetch all quizzes
 //    public List<Quiz> getAllAvailableQuizzes( int quizID) {

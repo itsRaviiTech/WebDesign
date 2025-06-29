@@ -21,6 +21,7 @@ public class CreateQuizServlet extends HttpServlet {
         String title = request.getParameter("title");
         String description = request.getParameter("description") != "" ? request.getParameter("description") : "Good Luck" ;
         boolean isPublished = Boolean.parseBoolean(request.getParameter("isPublished"));
+        int noAttempt = Integer.parseInt(request.getParameter("noAttempt"));
 
         HttpSession session = request.getSession();
         int createdBy = ((User) session.getAttribute("user")).getUserId();
@@ -30,10 +31,14 @@ public class CreateQuizServlet extends HttpServlet {
         quiz.setDescription(description);
         quiz.setIsPublished(isPublished);
         quiz.setCreatedBy(createdBy);
+        quiz.setNoOfAttempt(noAttempt);
 
         QuizDAO quizDAO = new QuizDAO();
         int id = quizDAO.createQuiz(quiz);
         
+        int status = quizDAO.insertNoOfAttempt(id, quiz);
+        
+        System.out.println(status);
         if (id > - 1) {
             session.setAttribute("QuizID", id);
             response.sendRedirect("addQuestions.jsp");

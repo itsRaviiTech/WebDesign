@@ -25,11 +25,11 @@
             List<Question> questions = (List<Question>) request.getAttribute("questionList");
         %>
 
-        <div class="container mt-5">
+        <div class="container-fluid  w-75 mt-5">
             <h2>Edit Quiz</h2>
-            <form class=" w-75" action="UpdateQuizServlet" method="post">
+            <form class="w-100" action="UpdateQuizServlet" method="post">
                 <input type="hidden" name="quizId" value="<%= quiz.getQuizId()%>">
-                <input type="hidden" id="questionCount" name="questionCount" value="<%= questions.size()%>">
+                <input class="w-100 bg-danger" type="hidden" id="questionCount" name="questionCount" value="<%= questions.size()%>">
 
                 <div class="mb-3">
                     <label class="form-label">Title:</label>
@@ -39,6 +39,11 @@
                 <div class="mb-3">
                     <label class="form-label ">Description:</label>
                     <textarea class="form-control w-100" name="description" required><%= quiz.getDescription()%></textarea>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label ">No Of Attempt :</label>
+                    <input type="number" class="form-control" name="noOfAttempt" value="<%= quiz.getNoOfAttempt()%>" required>
                 </div>
 
                 <div class="mb-3">

@@ -66,39 +66,6 @@ public class UpdateQuizServlet extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
 
-        // Set response content type
-        response.setContentType("text/html;charset=UTF-8");
-
-        // Get all parameters
-        Map<String, String[]> paramMap = request.getParameterMap();
-
-        try (PrintWriter out = response.getWriter()) {
-            out.println("<html><head><title>Parameters Debug</title></head><body>");
-            out.println("<h2>Received Parameters</h2>");
-            out.println("<table border='1' cellpadding='5' cellspacing='0'>");
-            out.println("<tr><th>Parameter Name</th><th>Value(s)</th></tr>");
-
-            if (paramMap != null && !paramMap.isEmpty()) {
-                for (Map.Entry<String, String[]> entry : paramMap.entrySet()) {
-                    out.print("<tr><td>" + entry.getKey() + "</td><td>");
-                    String[] values = entry.getValue();
-                    for (int i = 0; i < values.length; i++) {
-                        out.print(values[i]);
-                        if (i < values.length - 1) {
-                            out.print(", ");
-                        }
-                    }
-                    out.println("</td></tr>");
-                }
-            } else {
-                out.println("<tr><td colspan='2'>No parameters received.</td></tr>");
-            }
-
-            out.println("</table>");
-            out.println("</body></html>");
-        }
-
-        System.out.println("----- END DEBUG -----");
     }
 
     /**
