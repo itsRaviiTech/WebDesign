@@ -137,31 +137,41 @@ public class SubmitQuizServlet extends HttpServlet {
 
             int questionID = -1;
 
-            if ("Multiple Choice".equalsIgnoreCase(questionType)) {
-                for (int j = 1; j <= 4; j++) {
-                    String optionText = request.getParameter("optionText_" + i + "_" + j);
-                    boolean isCorrect = request.getParameter("isCorrect_" + i + "_" + j) != null;
+            String normalizedType = questionType.trim().replaceAll("\\s+", "").toLowerCase();
 
-                    Option opt = new Option();
-                    opt.setOptionText(optionText);
-                    opt.setIsCorrect(isCorrect);
-                    options.add(opt);
-                }
+            switch (normalizedType) {
+                case "multiplechoice":
+                    for (int j = 1; j <= 4; j++) {
+                        String optionText = request.getParameter("optionText_" + i + "_" + j);
+                        boolean isCorrect = request.getParameter("isCorrect_" + i + "_" + j) != null;
 
-            } else if ("True / False".equalsIgnoreCase(questionType)) {
-                String correctAnswer = request.getParameter("isCorrect_" + i); // "true" or "false"
+                        System.out.println("Option " + (j) + ": " + optionText + " | Correct: " + isCorrect);
 
-                // Add "True" option
-                Option trueOption = new Option();
-                trueOption.setOptionText("True");
-                trueOption.setIsCorrect("true".equalsIgnoreCase(correctAnswer));
-                options.add(trueOption);
+                        Option opt = new Option();
+                        opt.setOptionText(optionText);
+                        opt.setIsCorrect(isCorrect);
+                        options.add(opt);
+                    }
+                    break;
 
-                // Add "False" option
-                Option falseOption = new Option();
-                falseOption.setOptionText("False");
-                falseOption.setIsCorrect("false".equalsIgnoreCase(correctAnswer));
-                options.add(falseOption);
+                case "true/false":
+                    String correctAnswer = request.getParameter("isCorrect_" + i); // "true" or "false"
+                    System.out.println("Correct Answer: " + correctAnswer);
+
+                    Option trueOption = new Option();
+                    trueOption.setOptionText("True");
+                    trueOption.setIsCorrect("true".equalsIgnoreCase(correctAnswer));
+                    options.add(trueOption);
+
+                    Option falseOption = new Option();
+                    falseOption.setOptionText("False");
+                    falseOption.setIsCorrect("false".equalsIgnoreCase(correctAnswer));
+                    options.add(falseOption);
+                    break;
+
+                default:
+                    System.err.println("⚠️ Unknown question type received: [" + questionType + "]");
+                    continue; // skip this question
             }
 
             // Save question and options
