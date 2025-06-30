@@ -206,7 +206,7 @@ public class UpdateQuizServlet extends HttpServlet {
                         boolean optionUpdated = optionsDAO.UpdateOptionsByOptionID(option);
                         if (!optionUpdated) {
                             // fallback: insert if update fails
-                            optionsDAO.insertOptions(option, question.getQuestionID());
+                            optionsDAO.UpdateOptionsByOptionID(option);
                         }
                     }
                 } else {
