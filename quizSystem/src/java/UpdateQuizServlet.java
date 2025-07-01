@@ -199,9 +199,8 @@ public class UpdateQuizServlet extends HttpServlet {
                     optionsDAO.insertOptions(option, newQuestionId);
                 }
             } else {
-                // UPDATE existing question
-                boolean updated = questionDAO.UpdateQuestion(question);
-                if (updated) {
+                if (question.getQuestionID() != -1) {
+                    questionDAO.UpdateQuestion(question);
                     for (Option option : question.getOptions()) {
                         boolean optionUpdated = optionsDAO.UpdateOptionsByOptionID(option);
                         if (!optionUpdated) {

@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 const isCorrect = questionData?.options?.[i]?.isCorrect ? 'checked' : '';
                 optionsHTML += `
                     <div class="d-flex align-items-center gap-2 mt-2">
-                        <input type="hidden" name="optionId_${index}_${i + 1}" value="${questionData?.questionID ?? -1}">
+                        <input type="hidden" name="optionId_${index}_${i + 1}" value="${optionId}">
                         <div class="form-check m-0">
                             <input class="form-check-input" type="checkbox" name="isCorrect_${index}_${i + 1}" value="true" ${isCorrect}>
                         </div>
